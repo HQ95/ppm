@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{common::header('主页')}"></head>
+<body>
+<div id="aa" class="easyui-accordion"></div>
+<script>
+    //跳转控制器查询所有菜单
+    $.get(ctx + "sysMenus/tree", function (data) {
+        $.each(data, function (i, sm) {
+            //创建分类
+            $("#aa").accordion('add', {
+                title: sm.text,
+                content: "<ul id='tree" + sm.id + "' class='easyui-tree'></ul> "
+            })
+            //创建树控件
+            $("#tree" + sm.id).tree({
+                data: sm.children,
+                onClick: function (node) {
+                    if (node.attributes == null) {
+                        return;
+                    }
+                    $("#center").panel({
+                        href:ctx+node.attributes,
+                    })
+                }
+            })
+        })
+    })
+</script>
+</body>
+
+</HTML>
+
+
+
+
+

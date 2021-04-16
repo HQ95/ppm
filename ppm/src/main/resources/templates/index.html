@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+	<head th:replace="~{common::header('主页')}">
+		<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+		<meta http-equiv="Cache-Control" content="no-store"/>
+		<meta http-equiv="Pragma" content="no-cache"/>
+		<meta http-equiv="Expires" content="0"/>
+	</head>
+	<body class="easyui-layout">
+	<div id="cc" class="easyui-layout" fit="true">
+		//上
+		<div data-options="region:'north'" style="height:90px;" th:href="@{/bar}"></div>
+		//右
+		<div data-options="region:'east',iconCls:'icon-reload',title:'菜单',split:true" style="width:210px;"></div>
+		//左
+		<div data-options="region:'west',title:'菜单',split:true" style="width:240px;"  th:href="@{/leftRequire}"></div>
+		//中
+		<div data-options="region:'center',title:'内容'" style="padding:5px;">
+			<div id="center" class="easyui-panel" fit="true" border="false"></div>
+		</div>
+	</div>
+	</body>
+	<!--<frameset cols="250,*" framespacing="0" frameborder="0" style="border:0px">
+		<frame scrolling="no" noresize src="/leftRequire" marginwidth="0" marginheight="0" name="menu">
+		<frameset rows="20,*" framespacing="0" frameborder="0" style="border:0px"> 
+			<frame scrolling="no" noresize src="/bar" marginwidth="0" marginheight="0" name="bar">
+			<frame scrolling="no" noresize src="/mainRequire" marginwidth="0" marginheight="0" name="main">
+		</frameset>
+	</frameset>
+	<noframes></noframes>-->
+</html>

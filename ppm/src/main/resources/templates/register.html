@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{common::header('注册')}"></head>
+<script>
+    $(function () {
+        $('#formRegister').bootstrapValidator({
+            message: 'This value is not valid',
+            //提供输入验证图标提示
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                //用户名
+                loginId: {
+                    message: '用户名验证失败',
+                    validators: {
+                        notEmpty: {
+                            message: '用户名不能为空'
+                        },
+                        //发起Ajax请求
+                        remote: {
+                            url: ctx+'sysUsers/name',//验证地址
+                            data:{loginId:$('input[name="loginId"]').val()},
+                            message: '用户已存在',//提示消息
+                            delay :  2000,//设置2秒发起名字验证
+                            type: 'POST' //请求方式
+                        }
+                    }
+                },
+                //密码
+                password: {
+                    validators: {
+                        notEmpty: {
+                            message: '密码不能为空'
+                        },
+                        stringLength: {
+                            min: 6,
+                            max: 18,
+                            message: '密码长度必须在6到12位之间'
+                        },
+                        regexp: {
+                            regexp: /^[a-zA-Z0-9_]+$/,
+                            message: '密码只能包含大写、小写、数字和下划线'
+                        },
+                    }
+                },
+                //第二次
+                repass: {
+                    validators: {
+                        notEmpty: {
+                            message: '密码不能为空'
+                        },
+                        identical: {
+                            field: 'password',
+                            message: '两次输入的密码不一致'
+                        }
+                    }
+                }
+            }
+        }).on('success.form.bv', function(e) {//点击提交之后
+            e.preventDefault();
+            var $form = $(e.target);
+            var bv=$form.data('bootstrapValidator');
+            $.post(ctx+"sysUsers/userRegister", $form.serialize(), function(res) {
+                //恢复submit按钮disable状态。
+                $('#formRegister').bootstrapValidator('disableSubmitButtons', false);
+                var mes="";
+                if (res>0){
+                    //跳登录页面
+                    location=ctx+"login";
+                } else {
+                    mes = "注册失败";
+                }
+                $('#message').text(mes);
+            });
+        });
+    });
+    function fouce(){
+        $('#message').text("");
+    }
+</script>
+<body>
+<div class="panel panel-info" style="width:320px;margin: 200px auto;">
+    <div class="panel-heading" style="text-align: center;"><h3 class="panel-title">注册</h3></div>
+    <div class="panel-body" style="text-align: center">
+        <div id="message" style="color: red;position: absolute;padding-left: 40px"></div>
+        <form  id="formRegister"  method="post" class="form-horizontal"style="width:300px;padding-top:30px;padding-left: 40px;">
+            <div class="form-group" >
+                <div class="col-sm-11">
+                    <input type="text" class="form-control" name="loginId" placeholder="用户名" onfocus="fouce()">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-11">
+                    <input type="password" class="form-control" name="password" placeholder="密码" onfocus="fouce()">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-11">
+                    <input type="password" class="form-control" name="repass" placeholder="再次输入密码" onfocus="fouce()">
+                </div>
+            </div>
+            <p ><button type="submit" name="submit" class="btn btn-primary" style="width: 80px;margin-left: -20px;">注册</button></p>
+        </form>
+        <p>已有账号？<a th:href="@{/login}" style="cursor:pointer">返回登录</a></p></div>
+</div>
+</body>
+</html>

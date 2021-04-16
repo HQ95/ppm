@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{common::header('查看供应商信息')}"></head>
+<body>
+<table style="line-height: 30px" cellspacing=1 cellpadding=0 width="100%" bgcolor=#336699 bordercolorlight=#006699 border=0>
+    <tbody>
+    <tr>
+        <td>
+            <table cellspacing=1 cellpadding=3 width="100%" border=0>
+                <tbody  bgcolor="#f2f8ff">
+                <tr bgcolor=#ffffff>
+                    <td align=middle width="100%" bgcolor=#ffffff colspan=20 height=22>
+                        <h4 style="color: #0070c0">查看供应商信息</h4>
+                    </td>
+                </tr>
+                <tr>
+                    <td class=t1 nowrap width="20%">供应商编号</td>
+                    <td colspan=3>[[${session.supplier.supplierNum}]]</td>
+                </tr>
+                <tr>
+                    <td class=t1 nowrap width="20%">供应商证书编号</td>
+                    <td>[[${session.supplier.certificate}]]</td>
+                    <td class=t1 nowrap width="18%">公司名称</td>
+                    <td>[[${session.supplier.company}]]</td>
+                </tr>
+                <tr>
+                    <td class=t1 nowrap width="18%">法人代表</td>
+                    <td>[[${session.supplier.corporation}]]</td>
+                    <td class=t1 nowrap width="20%">公司性质</td>
+                    <td class=t2>[[${session.supplier.kind}]]</td>
+                </tr>
+                <tr>
+                    <td class=t1 nowrap width="20%">地&nbsp;&nbsp;&nbsp;&nbsp;址</td>
+                    <td>[[${session.supplier.address}]]</td>
+                    <td class=t1 nowrap width="18%">邮&nbsp;&nbsp;&nbsp;&nbsp;编</td>
+                    <td>[[${session.supplier.zip}]]</td>
+                </tr>
+                <tr>
+                    <td class=t1 nowrap width="20%">注册资金</td>
+                    <td>[[${session.supplier.regFund}]]</td>
+                    <td class=t1 nowrap width="18%">联&nbsp;系&nbsp;人</td>
+                    <td>[[${session.supplier.contact}]]</td>
+                </tr>
+                <tr>
+                    <td class=t1 nowrap width="20%">电&nbsp;&nbsp;&nbsp;&nbsp;话</td>
+                    <td>[[${session.supplier.phone}]]</td>
+                    <td class=t1 nowrap width="18%">传&nbsp;&nbsp;&nbsp;&nbsp;真</td>
+                    <td>[[${session.supplier.fax}]]</td>
+                </tr>
+                <tr>
+                    <td class=t1 nowrap width="20%">电子邮箱</td>
+                    <td colspan="3">[[${session.supplier.email}]]</td>
+                </tr>
+                </tbody>
+            </table>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

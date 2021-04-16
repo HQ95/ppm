@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{common::header('供应商产品信息')}">
+    <meta charset="UTF-8">
+</head>
+<body>
+<div class="panel panel-info">
+    <div class="panel-heading" style="text-align: center;">
+        <h3 class="panel-title">供应商产品信息</h3>
+    </div>
+    <div class="panel-body" style="text-align: center;height:550px;">
+        <!--工具栏-->
+        <div id="tb" style="padding:5px;height:auto">
+            <div style="margin-bottom:5px">
+                <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="addMaterial()">添加员工</a>
+                <a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editMaterial()">修改员工</a>
+                <a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="delMaterial()">删除员工</a>
+            </div>
+            <div>
+                产品编号: <input class="easyui-textbox" style="width:120px" id="mid">
+                产品名称: <input class="easyui-textbox" style="width:120px" id="name">
+                <a href="#" class="easyui-linkbutton" plain="true" iconCls="icon-search" onclick="doSearch()">搜索</a>
+            </div>
+        </div>
+        <!--产品数据表格-->
+        <table id="dg" class="easyui-datagrid"></table>
+        <!-- 添加和修改的对话框-->
+        <div id="dlg" class="easyui-dialog" style="width:360px;height:450px;padding:18px 20px" closed="true" buttons="#dlg-buttons">
+            <form id="fm" method="post">
+                <div style="margin-bottom:20px" hidden>
+                    <input class="easyui-textbox" name="id" style="width:100%" data-options="label:'序号'">
+                </div>
+                <div style="margin-bottom:20px">
+                    <input class="easyui-textbox" name="materialNum" style="width:100%" data-options="label:'产品编号:',required:true">
+                </div>
+                <div style="margin-bottom:20px">
+                    <input class="easyui-textbox" name="materialName" style="width:100%" data-options="label:'产品名称:',required:true">
+                </div>
+                <div style="margin-bottom:20px">
+                    <input class="easyui-textbox" name="materialType" style="width:100%" data-options="label:'产品类别:',required:true">
+                </div>
+                <div style="margin-bottom:20px">
+                    <input class="easyui-numberbox" name="materialCount" style="width:100%" data-options="label:'数量:',required:true">
+                </div>
+                <div style="margin-bottom:20px">
+                    <input class="easyui-textbox" name="materialUnit" style="width:100%" data-options="label:'单位:',required:true">
+                </div>
+                <div style="margin-bottom:20px">
+                    <input class="easyui-numberbox" name="materialMoney"  style="width:100%" data-options="label:'价格:',required:true">
+                </div>
+            </form>
+        </div>
+        <div id="dlg-buttons">
+            <a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveUser()">提交</a>
+            <a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')">关闭</a>
+        </div>
+
+    </div>
+</div>
+<script>
+    $(function () {
+        //获取数据
+        $('#dg').datagrid({
+            url:ctx+'supplier/material',
+            pagination:true,//分页
+            fit:true,
+            fitColumns:true,
+            singleSelect:true,//只能选中一行
+            pageList:[5,6,8,10,12],
+            pageSize:5,
+            toolbar:'#tb', //工具栏
+            columns:[
+                [
+                    {field:'check',checkbox:true,align:'center',hidden:true },
+                    {field:'id',title:'序号',width:130,align:'center',sortable:true},
+                    {field:'materialNum',title:'产品编号',width:150,align:'center'},
+                    {field:'materialName',title:'产品名称',align:'center'},
+                    {field:'materialType',title:'产品类别',width:150,align:'center'},
+                    {field:'material_count',title:'数量',width:150,align:'center',sortable:true},
+                    {field:'materialUnit',title:'单位',width:140,align:'center'},
+                    {field:'material_money',title:'价格',width:150,align:'center',sortable:true},
+                ]
+            ]
+        });
+
+
+    })
+    //搜索
+    function doSearch() {
+        $('#dg').datagrid('load',{
+            mid: $('#mid').val(),
+            name: $('#name').val()
+        });
+    }
+    //添加
+    var url;
+    function addMaterial() {
+        $('#dlg').dialog({
+            title: '添加产品',
+            closed: false,
+            modal: true
+        });
+        url=ctx+"supplier/addMaterial";
+    }
+    //修改
+    function editMaterial() {
+        var row = $('#dg').datagrid('getSelected');
+        if (row){
+            $('#dlg').dialog({
+                title: '修改产品',
+                closed: false,
+                modal: true
+            });
+            //把选中的值放入form表单中
+            $('#fm').form('load',{
+                id:row['id'],
+                materialNum:row['materialNum'],
+                materialName:row['materialName'],
+                materialType:row['materialType'],
+                materialCount:row['material_count'],
+                materialUnit:row['materialUnit'],
+                materialMoney:row['material_money']
+            });
+            url=ctx+"supplier/updMaterial";
+        }else{
+            $.messager.alert("提示","请选择要修改的产品！")
+        }
+
+
+    }
+    //删除
+    function delMaterial() {
+        //显示复选框和多选
+        $('#dg').datagrid('showColumn','check');
+        $('#dg').datagrid({singleSelect:false});
+        if ($('#dg').datagrid('getChecked').length>0){
+            //获取选中的行数组
+            var rows=$("#dg").datagrid('getSelections');
+            if (rows.length>0){
+                $.messager.confirm('确认','请问是否要删除该产品？',function(r){
+                    if (r){
+                        var ids='';
+                        for (var i=0;i<rows.length;i++){
+                            ids += rows[i]['id'];
+                            //只要不是最后一个，就加逗号
+                            if(i<rows.length-1){
+                                ids+= ',';
+                            }
+                        }
+                        $.post(ctx+"supplier/delMaterial",{ids:ids},function (res) {
+                            if (res>0){
+                                //刷新数据
+                                $("#dg").datagrid("reload");
+                                //隐藏复选框和多选
+                                $('#dg').datagrid('hideColumn','check');
+                                $('#dg').datagrid({singleSelect:true});
+                            }else{
+                                $.messager.show({
+                                    title:'系统消息',
+                                    msg:'删除失败',
+                                    timeout:3000,
+                                    showType:'slide'
+                                });
+                            }
+                        })
+                    }else{
+                        //隐藏复选框和多选
+                        $('#dg').datagrid('hideColumn','check');
+                        $('#dg').datagrid({singleSelect:true});
+                    }
+                });
+            }else{
+                $.messager.alert("系统信息","请选择要删除的产品！");
+            }
+        }
+
+    }
+    //添加或修改的提交事件
+    function saveUser(){
+        $('#fm').form('submit',{
+            url: url,
+            onSubmit: function(){
+                return $(this).form('validate');
+            },
+            success: function(result){
+                if (result>0){
+                    //关闭添加框
+                    $('#dlg').dialog('close');
+                    //刷新dataGrid
+                    $('#dg').datagrid('reload');
+                } else {
+                    $.messager.alert("提示","提交失败！");
+                }
+            }
+        });
+    }
+</script>
+</body>
+</html>
