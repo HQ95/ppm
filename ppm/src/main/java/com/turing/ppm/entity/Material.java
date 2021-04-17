@@ -13,13 +13,15 @@ public class Material implements Serializable {
 
     private String materialUnit;
 
-    private String materialType;
+    private Integer materialType;
 
     @JsonProperty("material_count")
     private Integer materialCount;
 
     @JsonProperty("material_money")
     private Double materialMoney;
+
+    private MaterialType mType;
 
     private static final long serialVersionUID = 1L;
 
@@ -36,7 +38,7 @@ public class Material implements Serializable {
     }
 
     public void setMaterialNum(String materialNum) {
-        this.materialNum = materialNum == null ? null : materialNum.trim();
+        this.materialNum = materialNum;
     }
 
     public String getMaterialName() {
@@ -44,7 +46,7 @@ public class Material implements Serializable {
     }
 
     public void setMaterialName(String materialName) {
-        this.materialName = materialName == null ? null : materialName.trim();
+        this.materialName = materialName;
     }
 
     public String getMaterialUnit() {
@@ -52,15 +54,15 @@ public class Material implements Serializable {
     }
 
     public void setMaterialUnit(String materialUnit) {
-        this.materialUnit = materialUnit == null ? null : materialUnit.trim();
+        this.materialUnit = materialUnit;
     }
 
-    public String getMaterialType() {
+    public Integer getMaterialType() {
         return materialType;
     }
 
-    public void setMaterialType(String materialType) {
-        this.materialType = materialType == null ? null : materialType.trim();
+    public void setMaterialType(Integer materialType) {
+        this.materialType = materialType;
     }
 
     public Integer getMaterialCount() {
@@ -77,5 +79,13 @@ public class Material implements Serializable {
 
     public void setMaterialMoney(Double materialMoney) {
         this.materialMoney = materialMoney;
+    }
+
+    public MaterialType getmType() {
+        return mType;
+    }
+
+    public void setmType(MaterialType mType) {
+        this.mType = mType;
     }
 }

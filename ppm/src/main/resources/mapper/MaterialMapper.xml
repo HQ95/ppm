@@ -6,9 +6,10 @@
     <result column="MATERIAL_NUM" property="materialNum" jdbcType="VARCHAR" />
     <result column="MATERIAL_NAME" property="materialName" jdbcType="VARCHAR" />
     <result column="MATERIAL_UNIT" property="materialUnit" jdbcType="VARCHAR" />
-    <result column="MATERIAL_TYPE" property="materialType" jdbcType="VARCHAR" />
+    <result column="MATERIAL_TYPE" property="materialType" jdbcType="INTEGER" />
     <result column="material_count" property="materialCount" jdbcType="INTEGER" />
     <result column="material_money" property="materialMoney" jdbcType="DOUBLE" />
+    <association property="mType" column="MATERIAL_TYPE" select="com.turing.ppm.mapper.MaterialTypeMapper.selectByPrimaryKey"></association>
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >

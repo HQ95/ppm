@@ -1,14 +1,13 @@
 package com.turing.ppm.controller;
 
 import com.turing.ppm.entity.*;
-import com.turing.ppm.service.MaterialService;
-import com.turing.ppm.service.SuppMaterialService;
-import com.turing.ppm.service.SupplierService;
-import com.turing.ppm.service.SysUsersService;
+import com.turing.ppm.mapper.MaterialMapper;
+import com.turing.ppm.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 /**
  * 供应商
@@ -24,6 +23,8 @@ public class SupplierController {
     private MaterialService materialService;
     @Autowired
     private SuppMaterialService suppMaterialService;
+    @Autowired
+    private MaterialTypeService materialTypeService;
 
     /**
      * 储存供应商的会话
@@ -58,6 +59,17 @@ public class SupplierController {
     public int updPass(String loginId,String password,String repass){
         return sysUsersService.updPass(loginId, password, repass);
     }
+
+    /**
+     * 获取产品类别下拉框
+     * @return
+     */
+    @PostMapping("/type")
+    @ResponseBody
+    public List<MaterialType> selectType(){
+        return materialTypeService.selectType();
+    }
+
     /**
      * 获取供应商的物资（产品）
      * @return
@@ -69,7 +81,6 @@ public class SupplierController {
         SysUsers user = (SysUsers) session.getAttribute("user");
         return materialService.selectList(user.getId(),"%"+mid+"%","%"+name+"%",sort, order,(pageNum-1)*pageSize, pageSize);
     }
-
     /**
      * 添加产品信息
      * @param material
@@ -115,4 +126,14 @@ public class SupplierController {
         return  materialService.deleteMaterial(ids);
     }
 
+
+    /**
+     * 获取商品类别分页（产品）
+     * @return
+     */
+    @PostMapping("/materialType")
+    @ResponseBody
+    public DataGrid selectMaterial(Integer id, String type,@RequestParam(value = "page",defaultValue="1")Integer pageNum, @RequestParam(value="rows",defaultValue="5")Integer pageSize){
+        return materialTypeService.selectPage(id,"%"+type+"%",(pageNum-1)*pageSize, pageSize);
+    }
 }

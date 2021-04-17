@@ -1,30 +1,187 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<HTML><HEAD><TITLE>��Ӧ�̲�Ʒ��Ϣ</TITLE>
-<SCRIPT language=JAVASCRIPT> 
-function prosave(){
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{common::header('产品类型维护')}">
+    <meta charset="UTF-8">
+</head>
+<!--<script language=javascript>
+    function prosave(){
 	window.document.location="category_save.html";
 }
 function mydelete(obj)
 {
-	if(confirm("��ȷ��ɾ������Ʒ��"))
+	if(confirm("您确定删除本商品？"))
 	{	
 		var myobj=obj.parentNode.parentNode.parentNode;
 		var myrow=obj.parentNode.parentNode;
 		myobj.deleteRow(myrow.rowIndex);
 	}
 }
-</SCRIPT>
- 
-<META http-equiv=Content-Language content=zh-cn>
-<META http-equiv=Content-Type content="text/html; charset=gb2312">
-<META content="MSHTML 6.00.2900.5626" name=GENERATOR>
-<META content=FrontPage.Editor.Document name=ProgId><LINK 
-href="css/style.css" rel=stylesheet>
-</HEAD>
-<BODY>
+</script>-->
+<body>
+<div class="panel panel-info">
+    <div class="panel-heading" style="text-align: center;">
+        <h3 class="panel-title">供应商材料类型维护</h3>
+    </div>
+    <div class="panel-body" style="text-align: center;height:550px;">
+        <!--工具栏-->
+        <div id="tb" style="padding:5px;height:auto">
+            <div style="margin-bottom:5px">
+                <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="addMaterialType()">添加产品类别</a>
+                <a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editMaterialType()">修改产品类别</a>
+                <a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="delMaterialType()">删除产品类别</a>
+            </div>
+            <div>
+                类型编号: <input class="easyui-textbox" style="width:120px" id="id">
+                类型名称: <input class="easyui-textbox" style="width:120px" id="type">
+                <a href="#" class="easyui-linkbutton" plain="true" iconCls="icon-search" onclick="doSearch()">搜索</a>
+            </div>
+        </div>
+        <!--产品数据表格-->
+        <table id="dg" class="easyui-datagrid"></table>
+        <!-- 添加和修改的对话框-->
+        <div id="dlg" class="easyui-dialog" style="width:360px;height:450px;padding:18px 20px" closed="true" buttons="#dlg-buttons">
+            <form id="fm" method="post">
+                <div style="margin-bottom:20px" hidden>
+                    <input class="easyui-textbox" name="id" style="width:100%" data-options="label:'序号'">
+                </div>
+                <div style="margin-bottom:20px">
+                    <input class="easyui-textbox" name="type" style="width:100%" data-options="label:'产品类别:',required:true">
+                </div>
+                <div style="margin-bottom:20px">
+                    <input class="easyui-textbox" name="info" style="width:100%" data-options="label:'产品类别描述:',required:true">
+                </div>
+            </form>
+        </div>
+        <div id="dlg-buttons">
+            <a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveUser()">提交</a>
+            <a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')">关闭</a>
+        </div>
+
+    </div>
+</div>
+<script>
+    $(function () {
+        //获取数据
+        $('#dg').datagrid({
+            url:ctx+'supplier/materialType',
+            pagination:true,//分页
+            fit:true,
+            fitColumns:true,
+            singleSelect:true,//只能选中一行
+            pageList:[5,6,8,10,12],
+            pageSize:5,
+            toolbar:'#tb', //工具栏
+            columns:[
+                [
+                    {field:'id',title:'序号',width:130,align:'center',sortable:true},
+                    {field:'type',title:'产品编号',width:150,align:'center'},
+                    {field:'info',title:'产品名称',align:'center'},
+                ]
+            ]
+        });
+    })
+    //搜索
+    function doSearch() {
+        $('#dg').datagrid('load',{
+            id: $('#id').val(),
+            type: $('#type').val()
+        });
+    }
+
+    //添加
+    var url;
+    function addMaterialType() {
+        $('#dlg').dialog({
+            title: '添加产品类别',
+            closed: false,
+            modal: true
+        });
+        url=ctx+"supplier/addMaterial";
+    }
+    //修改
+    function editMaterialType() {
+        var row = $('#dg').datagrid('getSelected');
+        if (row){
+            $('#dlg').dialog({
+                title: '修改产品类别',
+                closed: false,
+                modal: true
+            });
+            //把选中的值放入form表单中
+            $('#fm').form('load',row);
+            url=ctx+"supplier/updMaterial";
+        }else{
+            $.messager.alert("提示","请选择要修改的产品类别！")
+        }
+    }
+    //删除
+    function delMaterialType() {
+        var rows=$("#dg").datagrid('getSelections');
+        if (rows.length>0){
+            $.messager.confirm('确认','请问是否要删除该产品类别？',function(r){
+                if (r){
+                    var ids='';
+                    for (var i=0;i<rows.length;i++){
+                        ids += rows[i]['id'];
+                        //只要不是最后一个，就加逗号
+                        if(i<rows.length-1){
+                            ids+= ',';
+                        }
+                    }
+                    $.post(ctx+"supplier/delMaterial",{ids:ids},function (res) {
+                        if (res>0){
+                            //刷新数据
+                            $("#dg").datagrid("reload");
+                            //隐藏复选框和多选
+                            $('#dg').datagrid('hideColumn','check');
+                            $('#dg').datagrid({singleSelect:true});
+                        }else{
+                            $.messager.show({
+                                title:'系统消息',
+                                msg:'删除失败',
+                                timeout:3000,
+                                showType:'slide'
+                            });
+                        }
+                    })
+                }
+            });
+        }else{
+            $.messager.alert("系统信息","请选择要删除的产品类别！");
+        }
+
+    }
+    //添加或修改的提交事件
+    function saveUser(){
+        $('#fm').form('submit',{
+            url: url,
+            onSubmit: function(){
+                return $(this).form('validate');
+            },
+            success: function(result){
+                if (result>0){
+                    //关闭添加框
+                    $('#dlg').dialog('close');
+                    //刷新dataGrid
+                    $('#dg').datagrid('reload');
+                } else {
+                    $.messager.alert("提示","提交失败！");
+                }
+            }
+        });
+    }
+</script>
+
+
+
+
+
+</body>
+</html>
+<!--
 <CENTER>
 <FORM name=form action="" method=post>
-<H2><FONT color=#0070c0>��Ӧ�̲�������ά��</FONT></H2>
+<H2><FONT color=#0070c0>供应商材料类型维护</FONT></H2>
 <TABLE cellSpacing=1 cellPadding=0 width="100%" bgColor=#ffffff 
 borderColorLight=#ffffff border=0>
   <TBODY>
@@ -33,9 +190,9 @@ borderColorLight=#ffffff border=0>
       <TABLE cellSpacing=1 cellPadding=3 width="100%" border=0>
         <TBODY>
         <TR>
-          <TD noWrap align=middle>���ͱ�ţ�<INPUT maxLength=15 size=15 
-            name=p_prodno>&nbsp;&nbsp; �������ƣ�<INPUT maxLength=15 size=15 
-            name=p_prodname>&nbsp;&nbsp; <INPUT id=button2 onclick=submit_form_cx() type=button value=��ѯ name=button2></TD></TR></TBODY></TABLE></TD></TR></TBODY></TABLE><FORM 
+          <TD noWrap align=middle>类型编号：<INPUT maxLength=15 size=15 
+            name=p_prodno>&nbsp;&nbsp; 类型名称：<INPUT maxLength=15 size=15 
+            name=p_prodname>&nbsp;&nbsp; <INPUT id=button2 onclick=submit_form_cx() type=button value=查询 name=button2></TD></TR></TBODY></TABLE></TD></TR></TBODY></TABLE><FORM 
 name="form1" action="" method="Post">
 
 <TABLE style="LINE-HEIGHT: 30px" cellSpacing=1 cellPadding=0 width="100%" 
@@ -46,32 +203,32 @@ bgColor=#336699 borderColorLight=#006699 border=0>
       <TABLE cellSpacing=1 cellPadding=3 width="100%" border=0>
         <TBODY>
 		<tr class=t2>
-			<td colspan="11"><input type="button" value="����" onclick="prosave();"/></td>
+			<td colspan="11"><input type="button" value="增加" onclick="prosave();"/></td>
 			
 		</tr>
         <TR class=t1>
-          <TD noWrap align=middle>���</TD>
-          <TD noWrap align=middle>���ͱ��</TD>
-          <TD noWrap align=middle>��������</TD>
-          <TD noWrap align=middle>��������</TD>
-		  <TD noWrap align=middle>����</TD></TR>
+          <TD noWrap align=middle>序号</TD>
+          <TD noWrap align=middle>类型编号</TD>
+          <TD noWrap align=middle>类型名称</TD>
+          <TD noWrap align=middle>类型描述</TD>
+		  <TD noWrap align=middle>操纵</TD></TR>
         <TR class=t2>
           <TD align=middle>2</TD>
           <TD align=middle>001005000<BR></TD>
-          <TD>����<BR></TD>
-          <TD align=right>оƬ</TD>
-		  <TD align=center><a href="category_update.html">�޸�</a>&nbsp;&nbsp;<a onclick="mydelete(this)" style="cursor:hand">ɾ��</a></TD>
+          <TD>晶振<BR></TD>
+          <TD align=right>芯片</TD>
+		  <TD align=center><a href="category_update.html">修改</a>&nbsp;&nbsp;<a onclick="mydelete(this)" style="cursor:hand">删除</a></TD>
 		  </TR>
 		<tr class=t2>
-			<td colspan="11"><CENTER><FONT color=#000064>��&nbsp;</FONT><FONT color=#000064>��ҳ 
-��һҳ</FONT>&nbsp;<A 
+			<td colspan="11"><CENTER><FONT color=#000064>◆&nbsp;</FONT><FONT color=#000064>首页 
+上一页</FONT>&nbsp;<A 
 href="http://169.254.158.100/zzdl/Order/Order_Wbxjfa_List.asp?p_type=0&amp;p_prodno=&amp;p_pagesize=&amp;p_ftype=&amp;p_orderby=&amp;page=2"><FONT 
-color=#0000be>��һҳ</FONT></A>&nbsp;<A 
+color=#0000be>下一页</FONT></A>&nbsp;<A 
 href="http://169.254.158.100/zzdl/Order/Order_Wbxjfa_List.asp?p_type=0&amp;p_prodno=&amp;p_pagesize=&amp;p_ftype=&amp;p_orderby=&amp;page=4"><FONT 
-color=#0000be>βҳ</FONT></A><FONT color=#000064>&nbsp;�� 40 ������ƻ� ÿҳ10 
-������ƻ�</FONT><FONT color=#000064>&nbsp;ҳ��:<FONT 
-color=blue>1</FONT>/4ҳ</FONT><FONT color=#000064>&nbsp;��&nbsp;</FONT> </td>
+color=#0000be>尾页</FONT></A><FONT color=#000064>&nbsp;共 40 个需求计划 每页10 
+个需求计划</FONT><FONT color=#000064>&nbsp;页次:<FONT 
+color=blue>1</FONT>/4页</FONT><FONT color=#000064>&nbsp;◆&nbsp;</FONT> </td>
 		</tr>
        </TBODY></TABLE></TD></TR></TBODY></TABLE>
 	  
-</FORM></CENTER></CENTER></BODY></HTML>
+</FORM></CENTER></CENTER></BODY></HTML>-->
