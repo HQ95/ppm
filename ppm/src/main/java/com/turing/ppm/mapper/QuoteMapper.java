@@ -27,4 +27,31 @@ public interface QuoteMapper {
     int updateByPrimaryKeySelective(Quote record);
 
     int updateByPrimaryKey(Quote record);
+
+    /**
+     * 根据供应商编号查询报价表集合
+     * @param id 供应商编号
+     * @param title 报价书标题
+     * @param eTitle 询价书标题
+     * @param pageNum 当前页数
+     * @param pageSize 没页数量
+     * @return
+     */
+    List<Quote> selectQuoteList(@Param("id") Integer id,@Param("title")String title,@Param("eTitle")String eTitle,@Param("pageNum")Integer pageNum,@Param("pageSize")Integer pageSize);
+
+    /**
+     * 根据供应商编号查询报价表总数量
+     * @param id 供应商编号
+     * @param title 报价书标题
+     * @param eTitle 询价书标题
+     * @return
+     */
+    List<Quote> selectQuoteListCount(@Param("id") Integer id,@Param("title")String title,@Param("eTitle")String eTitle);
+
+    /**
+     * 批量删除报价
+     * @param ids
+     * @return
+     */
+    int deleteQuote(String [] ids);
 }

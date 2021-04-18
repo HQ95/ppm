@@ -2,6 +2,7 @@ package com.turing.ppm.service.impl;
 
 import com.turing.ppm.entity.DataGrid;
 import com.turing.ppm.entity.Material;
+import com.turing.ppm.entity.MaterialExample;
 import com.turing.ppm.mapper.MaterialMapper;
 import com.turing.ppm.mapper.SuppMaterialMapper;
 import com.turing.ppm.service.MaterialService;
@@ -42,5 +43,12 @@ public class MaterialServiceImpl implements MaterialService {
     @Override
     public int addMaterial(Material material) {
         return materialMapper.insertSelective(material);
+    }
+
+    @Override
+    public List<Material> selectByType(Integer materialType) {
+        MaterialExample example=new MaterialExample();
+        example.createCriteria().andMaterialTypeEqualTo(materialType.toString());
+        return materialMapper.selectByExample(example);
     }
 }

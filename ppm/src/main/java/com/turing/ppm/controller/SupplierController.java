@@ -1,7 +1,6 @@
 package com.turing.ppm.controller;
 
 import com.turing.ppm.entity.*;
-import com.turing.ppm.mapper.MaterialMapper;
 import com.turing.ppm.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,6 +24,11 @@ public class SupplierController {
     private SuppMaterialService suppMaterialService;
     @Autowired
     private MaterialTypeService materialTypeService;
+    @Autowired
+    private QuoteService quoteService;
+    @Autowired
+    private QuoteDetailService quoteDetailService;
+
 
     /**
      * 储存供应商的会话
@@ -136,4 +140,79 @@ public class SupplierController {
     public DataGrid selectMaterial(Integer id, String type,@RequestParam(value = "page",defaultValue="1")Integer pageNum, @RequestParam(value="rows",defaultValue="5")Integer pageSize){
         return materialTypeService.selectPage(id,"%"+type+"%",(pageNum-1)*pageSize, pageSize);
     }
+    /**
+     * 添加产品类别
+     * @return
+     */
+    @PostMapping("/addType")
+    @ResponseBody
+    public int addType(MaterialType type){
+        return  materialTypeService.addType(type);
+    }
+
+    /**
+     * 修改产品类别
+     * @return
+     */
+    @PostMapping("/updType")
+    @ResponseBody
+    public int updType(MaterialType type){
+        return  materialTypeService.updType(type);
+    }
+
+    /**
+     * 删除产品类别
+     * @return
+     */
+    @PostMapping("/delType")
+    @ResponseBody
+    public int delType(Integer id){
+        List<Material> materials = materialService.selectByType(id);
+        if(materials.size()>0){
+            return -1;
+        }
+        return  materialTypeService.deleteType(id);
+    }
+
+    /**
+     * 获取报价书
+     * @return
+     */
+    @PostMapping("/quote")
+    @ResponseBody
+    public DataGrid selectQuote(HttpSession session,String title, String eTitle,@RequestParam(value = "page",defaultValue="1")Integer pageNum, @RequestParam(value="rows",defaultValue="5")Integer pageSize){
+        //获取储存的供应商session
+        if(session.getAttribute("supplier")==null){
+            setSession(session);
+        }
+        Supplier supplier = (Supplier) session.getAttribute("supplier");
+        return quoteService.selectList(supplier.getId(), "%"+title+"%","%"+ eTitle+"%", (pageNum-1)*pageSize, pageSize);
+    }
+
+    /**
+     * 批量删除报价
+     * @param ids
+     * @return
+     */
+    @PostMapping("/delQuote")
+    @ResponseBody
+    public int updQuote(String [] ids){
+        return quoteService.delQuote(ids);
+    }
+
+    /**
+     * 查询报价明细表
+     * @param id
+     * @param session
+     */
+    @GetMapping("/selDetail")
+    public String selectDetail(Integer id,HttpSession session){
+        QuoteDetail quoteDetail = quoteDetailService.selectById(id);
+        session.setAttribute("quoteDetail",quoteDetail);
+        return "supplyman/quoteUpdate";
+    }
+
+
+
+
 }

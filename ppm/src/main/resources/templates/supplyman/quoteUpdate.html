@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{common::header('修改报价维护')}">
+    <meta charset="UTF-8">
+</head>
+<body>
+<div class="panel panel-info">
+    <div class="panel-heading" style="text-align: center;">
+        <h3 class="panel-title">修改报价维护</h3>
+    </div>
+    <div class="panel-body" style="text-align: center;height:550px;">
+        <form name="form" action="" method="post">
+            <table style="LINE-HEIGHT: 30px" cellSpacing=1 cellPadding=0 width="100%" bgColor=#336699 borderColorLight=#006699 border=0>
+                <tr>
+                    <td>
+                        <table cellpadding="3" cellspacing="1" border="1" width="100%" bgcolor="#336699">
+                            <tr>
+                                <td>物资编码</td>
+                                <td th:text="${session.quoteDetail.materialCode}"><br></td>
+                                <td>物资名称</td>
+                                <td th:text="${session.quoteDetail.materialName}"><br></td>
+                                <td>计量单位</td>
+                                <td th:text="${session.quoteDetail.measureUnit}"><br></td>
+                            </tr>
+                            <tr>
+                                <td>单价(元/含税)</td>
+                                <td>
+                                    <input class="easyui-textbox" name="unitPrice" th:value="${session.quoteDetail.unitPrice}">
+                                </td>
+                                <td>数量</td>
+                                <td>
+                                    <input class="easyui-textbox" name="amount" th:value="${session.quoteDetail.amount}">
+                                </td>
+                                <td>总价(元/含税)</td>
+                                    <td th:text="${session.quoteDetail.sumPrice}">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>运杂费(元/含税)</td>
+                                <td>
+                                    <input class="easyui-textbox" name="mixPrice" th:value="${session.quoteDetail.mixPrice}"></td>
+                                <td>其他费用(元/含税)</td>
+                                <td>
+                                    <input class="easyui-textbox" name="otherPrice" th:value="${session.quoteDetail.otherPrice}"></td>
+                                <td>总计(元/含税)</td>
+                                <td  name="totalPrice" th:text="${session.quoteDetail.totalPrice}">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>起始到货期</td>
+                                <td th:text="${#dates.format(session.quoteDetail.startDate,'yyyy-MM-dd')}"></td>
+                                <td>结束到货期</td>
+                                <td th:text="${#dates.format(session.quoteDetail.endDate,'yyyy-MM-dd')}">
+                                <td></td>
+                                <td></td>
+                                </td>
+                            </tr>
+                            <input type="hidden" name="HBSUM" value="3">
+
+                        </table>
+                    </td>
+                </tr>
+            </table>
+            <p></p>
+            <table style="LINE-HEIGHT: 30px" cellSpacing=1 cellPadding=0 width="100%"bgColor=#336699 borderColorLight=#006699 border=0>
+                <tr>
+                    <td>
+                        <table cellpadding="3" cellspacing="1" border="1" width="100%">
+                            <tr bgcolor="#f2f8ff">
+                                <td nowrap >数量合计</td>
+                                <td th:text="${session.quoteDetail.quote.sumAmount}"></td>
+                                <td nowrap>总金额(元)</td>
+                                <td th:text="${session.quoteDetail.quote.overallPrice}"></td>
+                            </tr>
+                            <tr bgcolor="#f2f8ff">
+                                <td nowrap >报价书标题</td>
+                                <td><input class="easyui-textbox" name="queTitle" th:value="${session.quoteDetail.quote.queTitle}"></td>
+                                <td nowrap >报价有效期</td>
+                                <td th:text="${#dates.format(session.quoteDetail.quote.endDate,'yyyy-MM-dd')}"></td>
+                            </tr>
+                            <tr bgcolor="#f2f8ff">
+                                <td nowrap>报价说明</td>
+                                <td colspan="3" style="width:100%">
+                                    <textarea name="p_strExplain" rows="4" style="width:100%">
+
+                                    </textarea>
+                                </td>
+                            </tr>
+
+                        </table>
+                    </td>
+                </tr>
+            </table>
+            <p></p>
+            <p Align="center">
+                <input onclick=" javascript:form_subt()" type="button" value="修改">
+                <input onclick=" javascript:form_back()" type="button" value="返回">
+            </p>
+        </form>
+    </div>
+</div>
+<script>
+
+</script>
+</body>
+</html>

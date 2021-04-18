@@ -40,6 +40,16 @@ public class QuoteDetail implements Serializable {
     private Date startDate;
 
     private Date endDate;
+    //报价表
+    private Quote quote;
+
+    public Quote getQuote() {
+        return quote;
+    }
+
+    public void setQuote(Quote quote) {
+        this.quote = quote;
+    }
 
     private static final long serialVersionUID = 1L;
 

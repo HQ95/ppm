@@ -36,4 +36,11 @@ public interface MaterialService {
      * @return
      */
     int addMaterial(Material material);
+
+    /**
+     * 根据产品类别查询产品
+     * @param materialType
+     * @return
+     */
+    List<Material> selectByType(Integer materialType);
 }

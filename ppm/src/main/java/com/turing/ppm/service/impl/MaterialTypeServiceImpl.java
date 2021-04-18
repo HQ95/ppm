@@ -25,6 +25,11 @@ public class MaterialTypeServiceImpl implements MaterialTypeService {
     }
 
     @Override
+    public int updType(MaterialType type) {
+        return materialTypeMapper.updateByPrimaryKeySelective(type);
+    }
+
+    @Override
     public int deleteType(int id) {
         return materialTypeMapper.deleteByPrimaryKey(id);
     }

@@ -20,6 +20,7 @@
     <result column="TOTAL_PRICE" property="totalPrice" jdbcType="DECIMAL" />
     <result column="START_DATE" property="startDate" jdbcType="TIMESTAMP" />
     <result column="END_DATE" property="endDate" jdbcType="TIMESTAMP" />
+    <association property="quote" column="QUOTE_ID" select="com.turing.ppm.mapper.QuoteMapper.selectByPrimaryKey"></association>
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >

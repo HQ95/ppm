@@ -1,5 +1,7 @@
 package com.turing.ppm.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -27,8 +29,9 @@ public class Quote implements Serializable {
 
     private String queTitle;
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date queDate;
-
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date endDate;
 
     private BigDecimal sumAmount;
@@ -38,6 +41,16 @@ public class Quote implements Serializable {
     private String quoRemark;
 
     private String status;
+    //询价表
+    private Enquire enquire;
+
+    public Enquire getEnquire() {
+        return enquire;
+    }
+
+    public void setEnquire(Enquire enquire) {
+        this.enquire = enquire;
+    }
 
     private static final long serialVersionUID = 1L;
 

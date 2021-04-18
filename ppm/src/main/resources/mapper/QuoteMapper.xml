@@ -19,6 +19,7 @@
     <result column="OVERALL_PRICE" property="overallPrice" jdbcType="DECIMAL" />
     <result column="QUO_REMARK" property="quoRemark" jdbcType="VARCHAR" />
     <result column="STATUS" property="status" jdbcType="VARCHAR" />
+    <association property="enquire" column="ENQUIRE_ID" select="com.turing.ppm.mapper.EnquireMapper.selectByPrimaryKey"></association>
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -83,6 +84,35 @@
     QUO_FAX, QUO_EMAIL, QUE_TITLE, QUE_DATE, END_DATE, SUM_AMOUNT, OVERALL_PRICE, QUO_REMARK, 
     STATUS
   </sql>
+ <!-- int deleteQuote(String [] ids);-->
+  <delete id="deleteQuote" >
+    delete from quote where id in
+    <foreach collection="array" item="id" open="(" close=")" separator=",">
+      #{id}
+    </foreach>
+  </delete>
+ <!-- List<Quote> selectQuoteListCount(@Param("id") Integer id,@Param("title")String title,@Param("eTitle")String eTitle);-->
+  <select id="selectQuoteListCount" resultMap="BaseResultMap" parameterType="com.turing.ppm.entity.Quote" >
+    select * from quote where SUPPLIER_ID=#{id}
+    <if test="title!='%null%'">
+      and QUE_TITLE like #{title}
+    </if>
+    <if test="eTitle!='%null%'">
+      and ENQUIRE_ID in(select id from enquire where ENQUIRE_NAME like #{eTitle})
+    </if>
+  </select>
+ <!--List<Quote> selectQuoteList(Integer id,String title,@Param("eTitle")String eTitle,Integer pageNum,Integer pageSize);-->
+  <select id="selectQuoteList" resultMap="BaseResultMap" parameterType="com.turing.ppm.entity.Quote" >
+    select * from quote where SUPPLIER_ID=#{id}
+    <if test="title!='%null%'">
+      and QUE_TITLE like #{title}
+    </if>
+    <if test="eTitle!='%null%'">
+     and ENQUIRE_ID in(select id from enquire where ENQUIRE_NAME like #{eTitle})
+    </if>
+    limit #{pageNum},#{pageSize}
+  </select>
+
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.turing.ppm.entity.QuoteExample" >
     select
     <if test="distinct" >
