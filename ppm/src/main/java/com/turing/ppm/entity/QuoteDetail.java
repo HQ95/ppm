@@ -1,5 +1,6 @@
 package com.turing.ppm.entity;
 
+import java.awt.print.PrinterGraphics;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -25,7 +26,7 @@ public class QuoteDetail implements Serializable {
 
     private String wrap;
 
-    private String amount;
+    private Integer amount;
 
     private BigDecimal unitPrice;
 
@@ -133,12 +134,12 @@ public class QuoteDetail implements Serializable {
         this.wrap = wrap == null ? null : wrap.trim();
     }
 
-    public String getAmount() {
+    public Integer getAmount() {
         return amount;
     }
 
-    public void setAmount(String amount) {
-        this.amount = amount == null ? null : amount.trim();
+    public void setAmount(Integer amount) {
+        this.amount = amount;
     }
 
     public BigDecimal getUnitPrice() {

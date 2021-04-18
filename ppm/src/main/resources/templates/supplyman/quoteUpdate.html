@@ -9,7 +9,9 @@
         <h3 class="panel-title">修改报价维护</h3>
     </div>
     <div class="panel-body" style="text-align: center;height:550px;">
-        <form name="form" action="" method="post">
+        <form id="ff" method="post">
+            <input name="id" th:value="${session.quoteDetail.id}" hidden="hidden">
+            <input name="quoteId" th:value="${session.quoteDetail.quoteId}" hidden="hidden">
             <table style="LINE-HEIGHT: 30px" cellSpacing=1 cellPadding=0 width="100%" bgColor=#336699 borderColorLight=#006699 border=0>
                 <tr>
                     <td>
@@ -25,25 +27,25 @@
                             <tr>
                                 <td>单价(元/含税)</td>
                                 <td>
-                                    <input class="easyui-textbox" name="unitPrice" th:value="${session.quoteDetail.unitPrice}">
+                                    <input class="form-control" style="width: 60%;margin: 0 auto"type="number" name="unitPrice" id="unitPrice" onblur="getNum()" th:value="${session.quoteDetail.unitPrice}">
                                 </td>
                                 <td>数量</td>
-                                <td>
-                                    <input class="easyui-textbox" name="amount" th:value="${session.quoteDetail.amount}">
+                                <td >
+                                    <input onblur="getNum()" class="form-control" style="width: 60%;margin: 0 auto"type="number" name="amount" id="amount" th:value="${session.quoteDetail.amount}">
                                 </td>
                                 <td>总价(元/含税)</td>
-                                    <td th:text="${session.quoteDetail.sumPrice}">
+                                    <td id="sumPrice" th:text="${session.quoteDetail.sumPrice}">
                                 </td>
                             </tr>
                             <tr>
                                 <td>运杂费(元/含税)</td>
                                 <td>
-                                    <input class="easyui-textbox" name="mixPrice" th:value="${session.quoteDetail.mixPrice}"></td>
+                                    <input class="form-control" style="width: 60%;margin: 0 auto" type="number" name="mixPrice" id="mixPrice" onblur="getNum()" th:value="${session.quoteDetail.mixPrice}"></td>
                                 <td>其他费用(元/含税)</td>
                                 <td>
-                                    <input class="easyui-textbox" name="otherPrice" th:value="${session.quoteDetail.otherPrice}"></td>
+                                    <input class="form-control" style="width: 60%;margin: 0 auto" type="number" name="otherPrice" id="otherPrice" onblur="getNum()" th:value="${session.quoteDetail.otherPrice}"></td>
                                 <td>总计(元/含税)</td>
-                                <td  name="totalPrice" th:text="${session.quoteDetail.totalPrice}">
+                                <td id="totalPrice" th:text="${session.quoteDetail.totalPrice}">
                                 </td>
                             </tr>
                             <tr>
@@ -67,10 +69,10 @@
                     <td>
                         <table cellpadding="3" cellspacing="1" border="1" width="100%">
                             <tr bgcolor="#f2f8ff">
-                                <td nowrap >数量合计</td>
-                                <td th:text="${session.quoteDetail.quote.sumAmount}"></td>
+                                <td width="15%">数量合计</td>
+                                <td width="25%" th:text="${session.quoteDetail.quote.sumAmount}" id="sumAmount" name="sumAmount"></td>
                                 <td nowrap>总金额(元)</td>
-                                <td th:text="${session.quoteDetail.quote.overallPrice}"></td>
+                                <td th:text="${session.quoteDetail.quote.overallPrice}" id="overallPrice" name="overallPrice"></td>
                             </tr>
                             <tr bgcolor="#f2f8ff">
                                 <td nowrap >报价书标题</td>
@@ -79,9 +81,9 @@
                                 <td th:text="${#dates.format(session.quoteDetail.quote.endDate,'yyyy-MM-dd')}"></td>
                             </tr>
                             <tr bgcolor="#f2f8ff">
-                                <td nowrap>报价说明</td>
+                                <td>报价说明</td>
                                 <td colspan="3" style="width:100%">
-                                    <textarea name="p_strExplain" rows="4" style="width:100%">
+                                    <textarea name="quoRemark" rows="4" style="width:100%" th:value="${session.quoteDetail.quote.quoRemark}">
 
                                     </textarea>
                                 </td>
@@ -93,14 +95,70 @@
             </table>
             <p></p>
             <p Align="center">
-                <input onclick=" javascript:form_subt()" type="button" value="修改">
-                <input onclick=" javascript:form_back()" type="button" value="返回">
+                <button type="button" onclick="goSubmit()" class="btn btn-primary" style="width: 80px;">修改</button>
+                <button type="button" onclick="goBack()" class="btn btn-primary" style="width: 80px;">返回</button>
             </p>
         </form>
     </div>
 </div>
 <script>
-
+    $(function () {
+        getNum();
+    })
+    //修改
+    function goSubmit(){
+        $('#ff').form('submit',{
+            url:ctx+'supplier/updDetail',
+            success:function(data){
+                if (data>0){
+                    $("#center").panel({
+                        href:ctx+"supplyman/Project_list"
+                    });
+                }else if (data ==-1){
+                    $.messager.show({
+                        title:'系统消息',
+                        msg:'修改报价表失败',
+                        timeout:5000,
+                        showType:'fade',
+                        style:{
+                        }
+                    });
+                } else{
+                    $.messager.show({
+                        title:'系统消息',
+                        msg:'修改报价明细表失败',
+                        timeout:5000,
+                        showType:'fade',
+                        style:{
+                        }
+                    });
+                }
+            }
+        });
+    }
+    //返回
+    function goBack(){
+        $("#center").panel({
+            href:ctx+"supplyman/Project_list"
+        });
+    }
+    //计算
+    function getNum(){
+        //总价
+        var money=$("#unitPrice").val()*$("#amount").val();
+        //运费，其他费用
+        var other=parseFloat($("#mixPrice").val())+parseFloat($("#otherPrice").val());
+        //总金额
+        var sum=parseFloat(money)+other;
+        //总价
+        $("#sumPrice").text(money);
+        //总计
+        $("#totalPrice").text(sum);
+        //数量合计
+        $("#sumAmount").text($("#amount").val());
+        //总金额
+        $("#overallPrice").text(sum);
+    }
 </script>
 </body>
 </html>

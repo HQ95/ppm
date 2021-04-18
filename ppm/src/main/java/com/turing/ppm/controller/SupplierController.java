@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
+import javax.sound.midi.Soundbank;
 import java.util.List;
 
 /**
@@ -190,14 +191,18 @@ public class SupplierController {
     }
 
     /**
-     * 批量删除报价
-     * @param ids
+     * 删除报价表
+     * @param id
      * @return
      */
     @PostMapping("/delQuote")
     @ResponseBody
-    public int updQuote(String [] ids){
-        return quoteService.delQuote(ids);
+    public int deleteQuote(Integer id){
+        int num=quoteDetailService.deleteDetail(id);
+        if(num<=0){
+            return -1;
+        }
+        return quoteService.delQuote(id);
     }
 
     /**
@@ -211,6 +216,23 @@ public class SupplierController {
         session.setAttribute("quoteDetail",quoteDetail);
         return "supplyman/quoteUpdate";
     }
+
+    /**
+     * 修改报价明细表和报价表
+     * @param quoteDetail
+     * @param quote
+     * @return
+     */
+    @PostMapping("/updDetail")
+    @ResponseBody
+    public int updateDetail(QuoteDetail quoteDetail,Quote quote){
+        int num=quoteService.updateQuote(quote);
+        if(num<=0){
+            return -1;
+        }
+        return quoteDetailService.updateDetail(quoteDetail);
+    }
+
 
 
 

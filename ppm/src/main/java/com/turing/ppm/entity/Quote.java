@@ -34,7 +34,7 @@ public class Quote implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date endDate;
 
-    private BigDecimal sumAmount;
+    private Integer sumAmount;
 
     private BigDecimal overallPrice;
 
@@ -158,11 +158,11 @@ public class Quote implements Serializable {
         this.endDate = endDate;
     }
 
-    public BigDecimal getSumAmount() {
+    public Integer getSumAmount() {
         return sumAmount;
     }
 
-    public void setSumAmount(BigDecimal sumAmount) {
+    public void setSumAmount(Integer sumAmount) {
         this.sumAmount = sumAmount;
     }
 

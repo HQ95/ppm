@@ -29,6 +29,8 @@ public class QuoteDetailServiceImpl implements QuoteDetailService {
 
     @Override
     public int deleteDetail(Integer id) {
-        return quoteDetailMapper.deleteByPrimaryKey(id);
+        QuoteDetailExample example=new QuoteDetailExample();
+        example.createCriteria().andQuoteIdEqualTo(id);
+        return quoteDetailMapper.deleteByExample(example);
     }
 }

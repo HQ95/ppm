@@ -13,10 +13,10 @@ public interface QuoteService {
 
     /**
      * 删除报价
-     * @param ids
+     * @param  id
      * @return
      */
-   int delQuote(String [] ids);
+   int delQuote(Integer id);
 
     /**
      * 根据id查询报价书

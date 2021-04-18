@@ -82,14 +82,14 @@
         if (row){
             $.messager.confirm('确认','请问是否要删除该报价？',function(r){
                 if (r){
-                    $.post(ctx+"supplier/delType",{id:row.id},function (res) {
+                    $.post(ctx+"supplier/delQuote",{id:row.id},function (res) {
                         if (res>0){
                             //刷新数据
                             $("#dg").datagrid("reload");
-                        }else if (res = -1) {
+                        }else if (res ==-1) {
                             $.messager.show({
                                 title:'系统消息',
-                                msg:'产品信息中有该产品类别，不能删除！！！',
+                                msg:'删除报价明细表时失败，导致删除报价表失败',
                                 timeout:5000,
                                 showType:'fade',
                                 style:{
@@ -132,10 +132,6 @@
         });
     }
 </script>
-
-
-
-
 
 </body>
 </html>

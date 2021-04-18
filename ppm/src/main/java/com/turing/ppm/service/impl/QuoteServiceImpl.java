@@ -23,10 +23,9 @@ public class QuoteServiceImpl implements QuoteService {
     }
 
     @Override
-    public int delQuote(String[] ids) {
-        return quoteMapper.deleteQuote(ids);
+    public int delQuote(Integer id) {
+        return quoteMapper.deleteByPrimaryKey(id);
     }
-
     @Override
     public Quote selectQuote(Integer id) {
         return quoteMapper.selectByPrimaryKey(id);

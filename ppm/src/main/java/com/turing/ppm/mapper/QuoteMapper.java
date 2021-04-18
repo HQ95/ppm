@@ -48,10 +48,4 @@ public interface QuoteMapper {
      */
     List<Quote> selectQuoteListCount(@Param("id") Integer id,@Param("title")String title,@Param("eTitle")String eTitle);
 
-    /**
-     * 批量删除报价
-     * @param ids
-     * @return
-     */
-    int deleteQuote(String [] ids);
 }
