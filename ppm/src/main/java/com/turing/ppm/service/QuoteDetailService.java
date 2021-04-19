@@ -2,13 +2,15 @@ package com.turing.ppm.service;
 
 import com.turing.ppm.entity.QuoteDetail;
 
+import java.util.List;
+
 public interface QuoteDetailService {
     /**
      * 根据报价的id查询报价详细表
      * @param id 报价报的id
      * @return
      */
-    QuoteDetail selectById(Integer id);
+    List<QuoteDetail> selectById(Integer id);
 
     /**
      * 修改报价明细表

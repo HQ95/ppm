@@ -4,91 +4,104 @@
     <meta charset="UTF-8">
 </head>
 <body>
+<style>
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+    }
+    input[type="number"]{
+        -moz-appearance: textfield;
+    }
+</style>
 <div class="panel panel-info">
     <div class="panel-heading" style="text-align: center;">
         <h3 class="panel-title">修改报价维护</h3>
     </div>
     <div class="panel-body" style="text-align: center;height:550px;">
         <form id="ff" method="post">
-            <input name="id" th:value="${session.quoteDetail.id}" hidden="hidden">
-            <input name="quoteId" th:value="${session.quoteDetail.quoteId}" hidden="hidden">
-            <table style="LINE-HEIGHT: 30px" cellSpacing=1 cellPadding=0 width="100%" bgColor=#336699 borderColorLight=#006699 border=0>
+           <div th:each="quoteDetail:${session.quoteDetailList}" >
+            <table name="tab" style="LINE-HEIGHT: 30px" cellSpacing=1 cellPadding=0 width="100%" bgColor=#336699 borderColorLight=#006699 border=0>
                 <tr>
                     <td>
                         <table cellpadding="3" cellspacing="1" border="1" width="100%" bgcolor="#336699">
+                            <input th:value="${quoteDetail.id}" hidden="hidden" th:attr="name='quoteDetails['+${quoteDetailStat.index}+'].id'">
                             <tr>
                                 <td>物资编码</td>
-                                <td th:text="${session.quoteDetail.materialCode}"><br></td>
+                                <td th:text="${quoteDetail.materialCode}"></td>
                                 <td>物资名称</td>
-                                <td th:text="${session.quoteDetail.materialName}"><br></td>
+                                <td th:text="${quoteDetail.materialName}"></td>
                                 <td>计量单位</td>
-                                <td th:text="${session.quoteDetail.measureUnit}"><br></td>
+                                <td th:text="${quoteDetail.measureUnit}"></td>
                             </tr>
                             <tr>
                                 <td>单价(元/含税)</td>
                                 <td>
-                                    <input class="form-control" style="width: 60%;margin: 0 auto"type="number" name="unitPrice" id="unitPrice" onblur="getNum()" th:value="${session.quoteDetail.unitPrice}">
+                                    <input class="form-control" style="width: 60%;margin: 0 auto"type="number" th:attr="name='quoteDetails['+${quoteDetailStat.index}+'].unitPrice',id='unitPrice'+${quoteDetailStat.index}"   onblur="getNum()" th:value="${quoteDetail.unitPrice}">
                                 </td>
                                 <td>数量</td>
                                 <td >
-                                    <input onblur="getNum()" class="form-control" style="width: 60%;margin: 0 auto"type="number" name="amount" id="amount" th:value="${session.quoteDetail.amount}">
+                                    <input onblur="getNum()" class="form-control" style="width: 60%;margin: 0 auto" type="number" th:attr="name='quoteDetails['+${quoteDetailStat.index}+'].amount',id='amount'+${quoteDetailStat.index}" th:value="${quoteDetail.amount}">
                                 </td>
                                 <td>总价(元/含税)</td>
-                                    <td id="sumPrice" th:text="${session.quoteDetail.sumPrice}">
+                                <td>
+                                    <input style="border:none;" readonly th:attr="name='quoteDetails['+${quoteDetailStat.index}+'].sumPrice',id='sumPrice'+${quoteDetailStat.index}" th:value="${quoteDetail.sumPrice}" >
                                 </td>
                             </tr>
                             <tr>
                                 <td>运杂费(元/含税)</td>
                                 <td>
-                                    <input class="form-control" style="width: 60%;margin: 0 auto" type="number" name="mixPrice" id="mixPrice" onblur="getNum()" th:value="${session.quoteDetail.mixPrice}"></td>
+                                    <input class="form-control" style="width: 60%;margin: 0 auto" type="number" th:attr="name='quoteDetails['+${quoteDetailStat.index}+'].mixPrice',id='mixPrice'+${quoteDetailStat.index}"onblur="getNum()" th:value="${quoteDetail.mixPrice}"></td>
                                 <td>其他费用(元/含税)</td>
                                 <td>
-                                    <input class="form-control" style="width: 60%;margin: 0 auto" type="number" name="otherPrice" id="otherPrice" onblur="getNum()" th:value="${session.quoteDetail.otherPrice}"></td>
+                                    <input class="form-control" style="width: 60%;margin: 0 auto" type="number" th:attr="name='quoteDetails['+${quoteDetailStat.index}+'].otherPrice',id='otherPrice'+${quoteDetailStat.index}" onblur="getNum()" th:value="${quoteDetail.otherPrice}"></td>
                                 <td>总计(元/含税)</td>
-                                <td id="totalPrice" th:text="${session.quoteDetail.totalPrice}">
+                                <td>
+                                    <input style="border:none;" readonly th:attr="name='quoteDetails['+${quoteDetailStat.index}+'].totalPrice',id='totalPrice'+${quoteDetailStat.index}" th:value="${quoteDetail.totalPrice}">
                                 </td>
                             </tr>
                             <tr>
                                 <td>起始到货期</td>
-                                <td th:text="${#dates.format(session.quoteDetail.startDate,'yyyy-MM-dd')}"></td>
+                                <td th:text="${#dates.format(quoteDetail.startDate,'yyyy-MM-dd')}"></td>
                                 <td>结束到货期</td>
-                                <td th:text="${#dates.format(session.quoteDetail.endDate,'yyyy-MM-dd')}">
+                                <td th:text="${#dates.format(quoteDetail.endDate,'yyyy-MM-dd')}">
                                 <td></td>
                                 <td></td>
-                                </td>
                             </tr>
-                            <input type="hidden" name="HBSUM" value="3">
-
                         </table>
                     </td>
                 </tr>
             </table>
             <p></p>
+            </div>
             <table style="LINE-HEIGHT: 30px" cellSpacing=1 cellPadding=0 width="100%"bgColor=#336699 borderColorLight=#006699 border=0>
                 <tr>
                     <td>
                         <table cellpadding="3" cellspacing="1" border="1" width="100%">
+                            <input name="id" th:value="${session.quote.id}" hidden="hidden">
                             <tr bgcolor="#f2f8ff">
                                 <td width="15%">数量合计</td>
-                                <td width="25%" th:text="${session.quoteDetail.quote.sumAmount}" id="sumAmount" name="sumAmount"></td>
+                                <td width="25%">
+                                    <input style="border:none;" readonly th:value="${session.quote.sumAmount}" id="sumAmount" name="sumAmount">
+                                </td>
                                 <td nowrap>总金额(元)</td>
-                                <td th:text="${session.quoteDetail.quote.overallPrice}" id="overallPrice" name="overallPrice"></td>
+                                <td >
+                                    <input style="border:none;" readonly th:value="${session.quote.overallPrice}" id="overallPrice" name="overallPrice">
+                                </td>
                             </tr>
                             <tr bgcolor="#f2f8ff">
                                 <td nowrap >报价书标题</td>
-                                <td><input class="easyui-textbox" name="queTitle" th:value="${session.quoteDetail.quote.queTitle}"></td>
+                                <td><input class="easyui-textbox" name="queTitle" th:value="${session.quote.queTitle}"></td>
                                 <td nowrap >报价有效期</td>
-                                <td th:text="${#dates.format(session.quoteDetail.quote.endDate,'yyyy-MM-dd')}"></td>
+                                <td th:text="${#dates.format(session.quote.endDate,'yyyy-MM-dd')}"></td>
                             </tr>
                             <tr bgcolor="#f2f8ff">
                                 <td>报价说明</td>
                                 <td colspan="3" style="width:100%">
-                                    <textarea name="quoRemark" rows="4" style="width:100%" th:value="${session.quoteDetail.quote.quoRemark}">
+                                    <textarea name="quoRemark" rows="4" style="width:100%" th:value="${session.quote.quoRemark}">
 
                                     </textarea>
                                 </td>
                             </tr>
-
                         </table>
                     </td>
                 </tr>
@@ -144,20 +157,36 @@
     }
     //计算
     function getNum(){
+
         //总价
-        var money=$("#unitPrice").val()*$("#amount").val();
+        var money=0;
         //运费，其他费用
-        var other=parseFloat($("#mixPrice").val())+parseFloat($("#otherPrice").val());
-        //总金额
-        var sum=parseFloat(money)+other;
-        //总价
-        $("#sumPrice").text(money);
+        var other=0;
         //总计
-        $("#totalPrice").text(sum);
+        var sum=parseFloat(money)+other;
         //数量合计
-        $("#sumAmount").text($("#amount").val());
+        var count=0;
         //总金额
-        $("#overallPrice").text(sum);
+        var total=0;
+
+        $("table[name='tab']").each(function (i,value) {
+            //总价
+           money =$("#unitPrice"+i).val()*$("#amount"+i).val();
+           $("#sumPrice"+i).val(money);
+           //其他费用
+           other = parseFloat($("#mixPrice"+i).val())+parseFloat($("#otherPrice"+i).val());
+           //总计
+           sum = parseFloat(money)+other;
+           $("#totalPrice"+i).val(sum);
+           //数量合计
+           count+=parseFloat($("#amount"+i).val());
+            //总金额
+           total+=sum;
+        });
+        //数量合计
+        $("#sumAmount").val(count);
+        //总金额
+        $("#overallPrice").val(total);
     }
 </script>
 </body>

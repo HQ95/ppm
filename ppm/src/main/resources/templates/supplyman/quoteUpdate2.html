@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{common::header('修改报价维护')}">
+    <meta charset="UTF-8">
+</head>
+<body>
+<div class="panel panel-info">
+    <div class="panel-heading" style="text-align: center;">
+        <h3 class="panel-title">修改报价维护</h3>
+    </div>
+    <div class="panel-body" style="text-align: center;height:550px;">
+        <input th:value="${session.quote.id}" id="quoteId" hidden="hidden">
+        <table id="dg" class="easyui-datagrid"></table>
+        <p></p>
+        <form id="ff" method="post">
+            <table style="LINE-HEIGHT: 30px" cellSpacing=1 cellPadding=0 width="100%"bgColor=#336699 borderColorLight=#006699 border=0>
+                <tr>
+                    <td>
+                        <table cellpadding="3" cellspacing="1" border="1" width="100%">
+                            <input name="id" th:value="${session.quote.id}" hidden="hidden">
+                            <tr bgcolor="#f2f8ff">
+                                <td width="15%">数量合计</td>
+                                <td width="25%" id="sumAmount" name="sumAmount">[[${session.quote.sumAmount}]]</td>
+                                <td nowrap>总金额(元)</td>
+                                <td id="overallPrice" name="overallPrice">[[${session.quote.overallPrice}]]</td>
+                            </tr>
+                            <tr bgcolor="#f2f8ff">
+                                <td nowrap >报价书标题</td>
+                                <td><input class="easyui-textbox" name="queTitle" th:value="${session.quote.queTitle}"></td>
+                                <td nowrap >报价有效期</td>
+                                <td th:text="${#dates.format(session.quote.endDate,'yyyy-MM-dd')}"></td>
+                            </tr>
+                            <tr bgcolor="#f2f8ff">
+                                <td>报价说明</td>
+                                <td colspan="3" style="width:100%">
+                                    <textarea name="quoRemark" rows="4" style="width:100%" th:value="${session.quote.quoRemark}">
+
+                                    </textarea>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+            <p></p>
+            <p Align="center">
+                <button type="button" onclick="goSubmit()" class="btn btn-primary" style="width: 80px;">修改</button>
+                <button type="button" onclick="goBack()" class="btn btn-primary" style="width: 80px;">返回</button>
+            </p>
+        </form>
+    </div>
+    <button type="button" onclick="getNum()" >修改</button>
+</div>
+<script>
+    $(function () {
+        //获取数据
+        $('#dg').datagrid({
+            url:ctx+"supplier/dataGrid?id="+$("#quoteId").val(),
+            fitColumns:true,
+            singleSelect:true,//只能选中一行
+            columns:[
+                [
+                    {field:'id',title:'序号',align:'center',width:'5%'},
+                    {field:'materialCode',title:'物资编码',align:'center',width:'10%'},
+                    {field:'materialName',title:'物资名称',align:'center',width:'20%'},
+                    {field:'unitPrice',title:'单价',align:'center',width:'10%'},
+                    {field:'amount',title:'数量',align:'center',width:'10%'},
+                    {field:'sumPrice',title:'总价',align:'center',width:'10%'},
+                    {field:'mixPrice',title:'运杂费(元/含税)',align:'center',width:'15%'},
+                    {field:'otherPrice',title:'其他费用(元/含税)',align:'center',width:'10%'},
+                    {field:'totalPrice',title:'总计(元/含税)',align:'center',width:'10%'},
+                ]
+            ]
+        });
+
+
+
+
+
+    })
+    //修改
+    function goSubmit(){
+        $('#ff').form('submit',{
+            url:ctx+'supplier/updDetail',
+            success:function(data){
+                if (data>0){
+                    $("#center").panel({
+                        href:ctx+"supplyman/Project_list"
+                    });
+                }else if (data ==-1){
+                    $.messager.show({
+                        title:'系统消息',
+                        msg:'修改报价表失败',
+                        timeout:5000,
+                        showType:'fade',
+                        style:{
+                        }
+                    });
+                } else{
+                    $.messager.show({
+                        title:'系统消息',
+                        msg:'修改报价明细表失败',
+                        timeout:5000,
+                        showType:'fade',
+                        style:{
+                        }
+                    });
+                }
+            }
+        });
+    }
+    //返回
+    function goBack(){
+        $("#center").panel({
+            href:ctx+"supplyman/Project_list"
+        });
+    }
+    //计算
+    function getNum(){
+        var rows=$("#dg").datagrid("getRows");
+        var count;
+        var total;
+        for (var i=0;i<rows.length;i++){
+            count+=parseFloat(rows[i].amount);
+        }
+
+
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{common::header('报价表')}">
+    <meta charset="UTF-8">
+</head>
+<body>
+<div class="panel panel-info">
+    <div class="panel-heading" style="text-align: center;">
+        <h3 class="panel-title">报价表</h3>
+    </div>
+    <div class="panel-body" style="height:548px;">
+        <form id="ff" method="post">
+            <table cellpadding="3" cellspacing="1" border="1" width="100%" bgcolor="#336699">
+                <tr>
+                    <td>报价书编号</td>
+                    <td><input name="enquireNum"></td>
+                    <td>报价书标题</td>
+                    <td><input name="enquireName"></td>
+                    <td>公司</td>
+                    <td><input name="enquireName"></td>
+                </tr>
+                <tr>
+                    <td>公司地址</td>
+                    <td><input><br></td>
+                    <td>联系人</td>
+                    <td><input></td>
+                    <td>电话</td>
+                    <td ><input></td>
+                </tr>
+                <tr>
+                    <td>传真</td>
+                    <td><input> </td>
+                    <td>电子邮件</td>
+                    <td><input></td>
+                </tr>
+            </table>
+
+        <div class="panel-heading" style="text-align: center;">
+            <h3 class="panel-title">报价明细表</h3>
+        </div>
+        <table th:each="d:${session.detail}" style="width: 100%;text-align:center;" border="1" cellspacing="0" cellpadding="0">
+            <tr>
+                <td>物资编号</td>
+                <td>[[${d.materialCode}]]</td>
+                <td>物资名称</td>
+                <td>[[${d.materialName}]]</td>
+                <td>单位</td>
+                <td>[[${d.measureUnit}]]</td>
+            </tr>
+            <tr>
+                <td>标准</td>
+                <td>[[${d.standard}]]</td>
+                <td>生产厂家</td>
+                <td><input></td>
+                <td>生产年限</td>
+                <td><input></td>
+            </tr>
+            <tr>
+                <td>数量</td>
+                <td>[[${d.amount}]]<input></td>
+                <td>单价</td>
+                <td><input></td>
+                <td>总价</td>
+                <td><input></td>
+            </tr>
+            <tr>
+                <td>运杂费</td>
+                <td><input></td>
+                <td>其他</td>
+                <td><input></td>
+                <td>总计</td>
+                <td><input></td>
+            </tr>
+            <tr>
+                <td>包装</td>
+                <td><input></td>
+                <td>开始交货</td>
+                <td><input></td>
+                <td>结束交货</td>
+                <td><input></td>
+            </tr>
+        </table>
+        <div style="text-align: center;">
+            <p></p>
+            <button type="button" onclick="goSubmit()" class="btn btn-primary" style="width: 80px;">提交</button>
+            <button type="button" onclick="goBack()" class="btn btn-primary" style="width: 80px;">返回</button>
+        </div>
+
+        </form>
+    </div>
+</div>
+</body>
+</html>

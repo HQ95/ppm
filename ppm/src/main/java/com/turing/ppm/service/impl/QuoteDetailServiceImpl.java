@@ -15,11 +15,10 @@ public class QuoteDetailServiceImpl implements QuoteDetailService {
     @Autowired
     private QuoteDetailMapper  quoteDetailMapper;
     @Override
-    public QuoteDetail selectById(Integer id) {
+    public List<QuoteDetail> selectById(Integer id) {
         QuoteDetailExample example=new QuoteDetailExample();
         example.createCriteria().andQuoteIdEqualTo(id);
-        List<QuoteDetail> list = quoteDetailMapper.selectByExample(example);
-        return list.size()>0?list.get(0):null;
+        return quoteDetailMapper.selectByExample(example);
     }
 
     @Override

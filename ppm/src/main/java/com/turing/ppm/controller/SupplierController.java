@@ -3,10 +3,12 @@ package com.turing.ppm.controller;
 import com.turing.ppm.entity.*;
 import com.turing.ppm.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.ansi.AnsiOutput;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
 import javax.servlet.http.HttpSession;
-import javax.sound.midi.Soundbank;
+import javax.xml.crypto.Data;
 import java.util.List;
 
 /**
@@ -29,6 +31,10 @@ public class SupplierController {
     private QuoteService quoteService;
     @Autowired
     private QuoteDetailService quoteDetailService;
+    @Autowired
+    private EnquireService enquireService;
+    @Autowired
+    private EnquireDetailService enquireDetailService;
 
 
     /**
@@ -212,8 +218,9 @@ public class SupplierController {
      */
     @GetMapping("/selDetail")
     public String selectDetail(Integer id,HttpSession session){
-        QuoteDetail quoteDetail = quoteDetailService.selectById(id);
-        session.setAttribute("quoteDetail",quoteDetail);
+        session.setAttribute("quote", quoteService.selectQuote(id));
+        List<QuoteDetail> quoteDetails = quoteDetailService.selectById(id);
+        session.setAttribute("quoteDetailList",quoteDetails);
         return "supplyman/quoteUpdate";
     }
 
@@ -225,13 +232,47 @@ public class SupplierController {
      */
     @PostMapping("/updDetail")
     @ResponseBody
-    public int updateDetail(QuoteDetail quoteDetail,Quote quote){
-        int num=quoteService.updateQuote(quote);
-        if(num<=0){
-            return -1;
+    public int updateDetail(QuoteDetailModel quoteDetail,Quote quote){
+        int num = 0;
+        List<QuoteDetail> quoteDetails = quoteDetail.getQuoteDetails();
+        for (QuoteDetail detail : quoteDetails) {
+            num=quoteDetailService.updateDetail(detail);
         }
-        return quoteDetailService.updateDetail(quoteDetail);
+        if(num>0){
+            System.out.println(quote.getOverallPrice());
+            num=quoteService.updateQuote(quote);
+           if(num<=0){
+               return -1;
+           }
+        }
+        return num;
     }
+
+    /**
+     * 获取询价表集合
+     * @return
+     */
+    @PostMapping("/enquire")
+    @ResponseBody
+    public DataGrid selectEnquireList(HttpSession session,String enquireNum, String enquireName,@RequestParam(value = "page",defaultValue = "1") Integer pageNum,@RequestParam(value = "rows",defaultValue = "5") Integer pageSize){
+        //获取储存的供应商session
+        if(session.getAttribute("supplier")==null){
+            setSession(session);
+        }
+        Supplier supplier = (Supplier) session.getAttribute("supplier");
+        return enquireService.selectList(supplier.getId(), "%"+enquireNum+"%","%"+enquireName+"%",(pageNum-1)*pageSize,pageSize);
+    }
+    /**
+     * 根据询价表获取询价明细表
+     * @return
+     */
+    @GetMapping("/enquireDetail")
+    public String selectEnquireDetail(Integer id, HttpSession session){
+        session.setAttribute("enquire", enquireService.selectById(id));
+        session.setAttribute("detail", enquireDetailService.selectByEid(id));
+        return "supplyman/enquireDetail" ;
+    }
+
 
 
 

@@ -1,5 +1,7 @@
 package com.turing.ppm.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -24,6 +26,7 @@ public class Enquire implements Serializable {
 
     private String email;
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date endDate;
 
     private String remark;

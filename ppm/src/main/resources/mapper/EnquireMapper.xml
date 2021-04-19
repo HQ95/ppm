@@ -77,6 +77,30 @@
     ID, ENQUIRE_NUM, ENQUIRE_NAME, COMPANY, LINKMAN, ADDRESS, PHONE, FAX, ZIP, EMAIL, 
     END_DATE, REMARK
   </sql>
+
+ <!-- List<Enquire> selectEnquireCount(@Param("id") Integer id,@Param("enquireNum") String enquireNum,@Param("enquireName")String enquireName);-->
+  <select id="selectEnquireCount" resultMap="BaseResultMap" parameterType="com.turing.ppm.entity.Enquire" >
+    SELECT * FROM enquire where id not in(select enquire_id from quote where supplier_id=#{id}) and END_DATE>NOW()
+    <if test="enquireNum!='%null%'">
+      and enquire_num like #{enquireNum}
+    </if>
+    <if test="enquireName!='%null%'">
+      and enquire_name like #{enquireName}
+    </if>
+  </select>
+
+ <!-- List<Enquire> selectEnquireList(String enquireNum,String enquireName,Integer pageNum,Integer pageSize);-->
+  <select id="selectEnquireList" resultMap="BaseResultMap" parameterType="com.turing.ppm.entity.Enquire" >
+    SELECT * FROM enquire where id not in(select enquire_id from quote where supplier_id=#{id}) and END_DATE>NOW()
+    <if test="enquireNum!='%null%'">
+      and enquire_num like #{enquireNum}
+    </if>
+    <if test="enquireName!='%null%'">
+      and enquire_name like #{enquireName}
+    </if>
+    limit #{pageNum},#{pageSize}
+  </select>
+
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.turing.ppm.entity.EnquireExample" >
     select
     <if test="distinct" >

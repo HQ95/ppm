@@ -103,7 +103,7 @@
   </select>
  <!--List<Quote> selectQuoteList(Integer id,String title,@Param("eTitle")String eTitle,Integer pageNum,Integer pageSize);-->
   <select id="selectQuoteList" resultMap="BaseResultMap" parameterType="com.turing.ppm.entity.Quote" >
-    select * from quote where SUPPLIER_ID=#{id}
+    select * from quote where SUPPLIER_ID=#{id} and END_DATE>now()
     <if test="title!='%null%'">
       and QUE_TITLE like #{title}
     </if>

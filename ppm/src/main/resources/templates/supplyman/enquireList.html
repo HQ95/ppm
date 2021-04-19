@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{common::header('询价书')}">
+    <meta charset="UTF-8">
+</head>
+<body>
+<div class="panel panel-info">
+    <div class="panel-heading" style="text-align: center;">
+        <h3 class="panel-title">询价书</h3>
+    </div>
+    <div class="panel-body" style="text-align:center;height:548px;">
+        <!--产品类别表格-->
+        <table id="dg" class="easyui-datagrid"></table>
+        <!--工具栏-->
+        <div id="tb" style="padding:5px;height:auto">
+            <div>
+                询价书编号: <input class="easyui-textbox" style="width:120px" id="id">
+                询价书名称: <input class="easyui-textbox" style="width:120px" id="type">
+                <a href="#" class="easyui-linkbutton" plain="true" iconCls="icon-search" onclick="doSearch()">搜索</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        //获取数据
+        $('#dg').datagrid({
+            url:ctx+'supplier/enquire',
+            pagination:true,//分页
+            fit:true,
+            fitColumns:true,
+            singleSelect:true,//只能选中一行
+            pageList:[5,6,8,10,12],
+            pageSize:5,
+            toolbar:'#tb', //工具栏
+            columns:[
+                [
+                    {field:'id',title:'序号',align:'center',width:'10%'},
+                    {field:'enquireNum',title:'询价书编号',align:'center',width:'20%'},
+                    {field:'enquireName',title:'询价书名称',align:'center',width:'25%'},
+                    {field:'company',title:'公司',align:'center',width:'30%'},
+                    {field:'endDate',title:'报价截止时间',align:'center',width:'15%'},
+                ]
+            ],
+            //双击事件
+            onDblClickRow: function(index,data){
+                $("#center").panel({
+                    href:ctx+"supplier/enquireDetail?id="+data.id,
+                });
+            }
+
+        })
+    })
+    //搜索
+    function doSearch() {
+        $('#dg').datagrid('load',{
+            enquireNum: $('#id').val(),
+            enquireName: $('#type').val()
+        });
+    }
+</script>
+</body>
+</html>
