@@ -83,6 +83,12 @@
     MIX_PRICE, OTHER_PRICE, TOTAL_PRICE, END_DATE, ADDRESS, MODE, WRAP_REQUIRE, FACTORY, 
     OTHER_REQUIRE
   </sql>
+
+  <!--List<ContractDetail> selectByContId(@Param("contId") Integer contId);-->
+  <select id="selectByContId" resultMap="BaseResultMap" parameterType="com.turing.ppm.entity.ContractDetail" >
+    select * from contract_detail where cont_id=#{contId}
+  </select>
+
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.turing.ppm.entity.ContractDetailExample" >
     select
     <if test="distinct" >

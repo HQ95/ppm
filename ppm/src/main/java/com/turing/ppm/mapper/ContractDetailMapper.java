@@ -34,7 +34,6 @@ public interface ContractDetailMapper {
      * @param contId 合同序号
      * @return
      */
-    @Select("select * from select * from contract_detail where cont_id=#{contId}")
-    ContractDetail selectByContId(@Param("contId") Integer contId);
+    List<ContractDetail> selectByContId(@Param("contId") Integer contId);
 
 }

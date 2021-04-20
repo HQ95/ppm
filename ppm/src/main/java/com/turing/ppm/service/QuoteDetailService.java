@@ -25,4 +25,11 @@ public interface QuoteDetailService {
      * @return
      */
     int deleteDetail(Integer id);
+
+    /**
+     * 添加报价明细表
+     * @param quoteDetail
+     * @return
+     */
+    int addDetail(QuoteDetail quoteDetail);
 }

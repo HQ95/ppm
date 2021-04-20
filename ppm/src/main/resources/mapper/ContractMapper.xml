@@ -28,7 +28,7 @@
     <result column="OUT_DAY" property="outDay" jdbcType="VARCHAR" />
     <result column="WRAP_REQUIRE" property="wrapRequire" jdbcType="VARCHAR" />
     <result column="REMARK" property="remark" jdbcType="VARCHAR" />
-    <association property="contractDetail" column="contId" select="com.turing.ppm.mapper.ContractDetailMapper.selectByContId"></association>
+    <collection property="contractDetail" column="id" select="com.turing.ppm.mapper.ContractDetailMapper.selectByContId"></collection>
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -94,6 +94,34 @@
     STANDARD_NO, PLACE, CONT_PRICE, TRANSPORT, PAY_WAY, OUT_PERM, OUT_DAY, WRAP_REQUIRE, 
     REMARK
   </sql>
+  <!--List<Contract> selectContractCount(@Param("name") String name,@Param("num")String num,@Param("date1")String date1,@Param("date2")String date2);-->
+  <select id="selectContractCount" resultMap="BaseResultMap" parameterType="com.turing.ppm.entity.Contract" >
+    SELECT * FROM contract where id in(select CONT_ID from contract_detail where MATERIAL_NAME like concat("%",#{name},"%") )
+    <if test="num!=null and num!=''">
+      and cont_num like concat("%",#{num},"%")
+    </if>
+    <if test="date1!=null and date1!=''">
+      and verify_date &gt;= #{date1}
+    </if>
+    <if test="date2!=null and date2!=''">
+      and verify_date &lt;= #{date2}
+    </if>
+  </select>
+  <!--List<Contract> selectContractList(@Param("name") String name,@Param("num")String num,@Param("date1")String date1,@Param("date2")String date2,@Param("pageNum")Integer pageNum,@Param("pageSize")Integer pageSize);-->
+  <select id="selectContractList" resultMap="BaseResultMap" parameterType="com.turing.ppm.entity.Contract" >
+    SELECT * FROM contract where id in(select CONT_ID from contract_detail where MATERIAL_NAME like concat("%",#{name},"%") )
+    <if test="num!=null and num!=''">
+      and cont_num like concat("%",#{num},"%")
+    </if>
+    <if test="date1!=null and date1!=''">
+      and verify_date &gt;= #{date1}
+    </if>
+    <if test="date2!=null and date2!=''">
+      and verify_date &lt;= #{date2}
+    </if>
+    limit #{pageNum},#{pageSize}
+  </select>
+
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.turing.ppm.entity.ContractExample" >
     select
     <if test="distinct" >

@@ -10,74 +10,95 @@
     </div>
     <div class="panel-body" style="height:548px;">
         <form id="ff" method="post">
+            <!--数量总数-->
+            <input hidden id="sumAmount" name="sumAmount">
+            <!--总金额-->
+            <input hidden id="overallPrice" name="overallPrice">
+            <!--询价结束时间-->
+            <input hidden name="endDate" th:value="${#dates.format(session.enquire.endDate,'yyyy-MM-dd')}">
+            <!--询价书编号-->
+            <input hidden name="enquireId" th:value="${session.enquire.id}">
+            <!--供应商编号-->
+            <input hidden name="supplierId" th:value="${session.supplier.id}">
+
             <table cellpadding="3" cellspacing="1" border="1" width="100%" bgcolor="#336699">
                 <tr>
                     <td>报价书编号</td>
-                    <td><input name="enquireNum"></td>
+                    <td><input name="quoteNum"></td>
                     <td>报价书标题</td>
-                    <td><input name="enquireName"></td>
+                    <td><input name="queTitle"></td>
                     <td>公司</td>
-                    <td><input name="enquireName"></td>
+                    <td><input name="quoCompany" th:value="${session.supplier.company}"></td>
                 </tr>
                 <tr>
                     <td>公司地址</td>
-                    <td><input><br></td>
+                    <td><input name="quoAddress" th:value="${session.supplier.company}"></td>
                     <td>联系人</td>
-                    <td><input></td>
+                    <td><input name="quoLinkman" th:value="${session.supplier.contact}"></td>
                     <td>电话</td>
-                    <td ><input></td>
+                    <td ><input name="quoPhone" th:value="${session.supplier.phone}"></td>
                 </tr>
                 <tr>
                     <td>传真</td>
-                    <td><input> </td>
+                    <td><input name="quoFax" th:value="${session.supplier.fax}"> </td>
                     <td>电子邮件</td>
-                    <td><input></td>
+                    <td><input name="quoEmail" th:value="${session.supplier.email}"></td>
                 </tr>
             </table>
-
         <div class="panel-heading" style="text-align: center;">
             <h3 class="panel-title">报价明细表</h3>
         </div>
-        <table th:each="d:${session.detail}" style="width: 100%;text-align:center;" border="1" cellspacing="0" cellpadding="0">
+        <table name="tab" th:each="d:${session.detail}" style="width: 100%;text-align:center;" border="1" cellspacing="0" cellpadding="0">
             <tr>
                 <td>物资编号</td>
-                <td>[[${d.materialCode}]]</td>
+                <td>
+                    <!--需求计划序号-->
+                    <input hidden th:value="${d.orderId}" th:attr="name='quoteDetails['+${dStat.index}+'].orderId'">
+
+                    <input th:value="${d.materialCode}" th:attr="name='quoteDetails['+${dStat.index}+'].materialCode'">
+                </td>
                 <td>物资名称</td>
-                <td>[[${d.materialName}]]</td>
+                <td>
+                    <input th:value="${d.materialName}" th:attr="name='quoteDetails['+${dStat.index}+'].materialName'">
+                </td>
                 <td>单位</td>
-                <td>[[${d.measureUnit}]]</td>
+                <td>
+                    <input th:value="${d.measureUnit}" th:attr="name='quoteDetails['+${dStat.index}+'].measureUnit'">
+                </td>
             </tr>
             <tr>
                 <td>标准</td>
-                <td>[[${d.standard}]]</td>
+                <td>
+                    <input th:value="${d.standard}" th:attr="name='quoteDetails['+${dStat.index}+'].standard'">
+                </td>
                 <td>生产厂家</td>
-                <td><input></td>
+                <td><input th:attr="name='quoteDetails['+${dStat.index}+'].factory'"></td>
                 <td>生产年限</td>
-                <td><input></td>
+                <td><input th:attr="name='quoteDetails['+${dStat.index}+'].prodYear'"></td>
             </tr>
             <tr>
                 <td>数量</td>
-                <td>[[${d.amount}]]<input></td>
+                <td><input onblur="calculate()" th:attr="name='quoteDetails['+${dStat.index}+'].amount',id='amount'+${dStat.index}" th:value="${d.amount}"></td>
                 <td>单价</td>
-                <td><input></td>
+                <td><input onblur="calculate()" th:attr="name='quoteDetails['+${dStat.index}+'].unitPrice',id='unitPrice'+${dStat.index}"></td>
                 <td>总价</td>
-                <td><input></td>
+                <td><input style="border:none;" readonly th:attr="name='quoteDetails['+${dStat.index}+'].sumPrice',id='sumPrice'+${dStat.index}"></td>
             </tr>
             <tr>
                 <td>运杂费</td>
-                <td><input></td>
+                <td><input onblur="calculate()" th:attr="name='quoteDetails['+${dStat.index}+'].mixPrice',id='mixPrice'+${dStat.index}"></td>
                 <td>其他</td>
-                <td><input></td>
+                <td><input onblur="calculate()" th:attr="name='quoteDetails['+${dStat.index}+'].otherPrice',id='otherPrice'+${dStat.index}"></td>
                 <td>总计</td>
-                <td><input></td>
+                <td><input style="border:none;" readonly th:attr="name='quoteDetails['+${dStat.index}+'].totalPrice',id='totalPrice'+${dStat.index}"></td>
             </tr>
             <tr>
                 <td>包装</td>
-                <td><input></td>
+                <td><input th:attr="name='quoteDetails['+${dStat.index}+'].wrap'" ></td>
                 <td>开始交货</td>
-                <td><input></td>
+                <td><input th:attr="name='quoteDetails['+${dStat.index}+'].startDate'" th:value="${#dates.format(d.startDate,'yyyy-MM-dd')}"></td>
                 <td>结束交货</td>
-                <td><input></td>
+                <td><input th:attr="name='quoteDetails['+${dStat.index}+'].endDate'" th:value="${#dates.format(d.endDate,'yyyy-MM-dd')}"></td>
             </tr>
         </table>
         <div style="text-align: center;">
@@ -85,9 +106,83 @@
             <button type="button" onclick="goSubmit()" class="btn btn-primary" style="width: 80px;">提交</button>
             <button type="button" onclick="goBack()" class="btn btn-primary" style="width: 80px;">返回</button>
         </div>
-
         </form>
     </div>
 </div>
+<script>
+    //计算
+    function calculate(){
+        //总价
+        var money=0;
+        //运费，其他费用
+        var other=0;
+        //总计
+        var sum=parseFloat(money)+other;
+        //数量合计
+        var count=0;
+        //总金额
+        var total=0;
+
+        $("table[name='tab']").each(function (i,value) {
+            //总价
+            money =$("#unitPrice"+i).val()*$("#amount"+i).val();
+            $("#sumPrice"+i).val(money);
+            //其他费用
+            other = parseFloat($("#mixPrice"+i).val())+parseFloat($("#otherPrice"+i).val());
+            if(isNaN(other)){
+                other = 0;
+            }
+            //总计
+            sum = parseFloat(money)+other;
+            $("#totalPrice"+i).val(sum);
+            //数量合计
+            count+=parseFloat($("#amount"+i).val());
+            //总金额
+            total+=sum;
+        });
+        //数量合计
+        $("#sumAmount").val(count);
+        //总金额
+        $("#overallPrice").val(total);
+    }
+
+    //提交
+    function goSubmit(){
+        $('#ff').form('submit',{
+            url:ctx+'supplier/addQuote',
+            success:function(data){
+                if (data>0){
+                    $("#center").panel({
+                        href:ctx+"supplyman/Project_list"
+                    });
+                }else if (data ==-1){
+                    $.messager.show({
+                        title:'系统消息',
+                        msg:'添加报价明细表失败',
+                        timeout:5000,
+                        showType:'fade',
+                        style:{
+                        }
+                    });
+                } else{
+                    $.messager.show({
+                        title:'系统消息',
+                        msg:'添加失败',
+                        timeout:5000,
+                        showType:'fade',
+                        style:{
+                        }
+                    });
+                }
+            }
+        });
+    }
+    //返回
+    function goBack(){
+        $("#center").panel({
+            href:ctx+"supplyman/enquireList"
+        });
+    }
+</script>
 </body>
 </html>

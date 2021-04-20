@@ -157,7 +157,7 @@
       #{endDate,jdbcType=TIMESTAMP}, #{sumAmount,jdbcType=DECIMAL}, #{overallPrice,jdbcType=DECIMAL}, 
       #{quoRemark,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.turing.ppm.entity.Quote" >
+  <insert id="insertSelective" parameterType="com.turing.ppm.entity.Quote" useGeneratedKeys="true" keyProperty="id">
     insert into quote
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >

@@ -31,4 +31,11 @@ public interface QuoteService {
      * @return
      */
    int updateQuote(Quote quote);
+
+    /**
+     * 添加报价书
+     * @param quote
+     * @return
+     */
+   int addQuote(Quote quote);
 }

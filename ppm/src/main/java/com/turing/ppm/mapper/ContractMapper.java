@@ -31,10 +31,24 @@ public interface ContractMapper {
 
     int updateByPrimaryKey(Contract record);
     /**
-     * 根据合同申请表的合同编号查询合同表
-     * @param contNum 合同编号
+     * 查询合同表
+     * @param name 物资名称
+     * @param num 合同编号
+     * @param date1 签订日期
+     * @param date2 签订日期
+     * @param pageNum
+     * @param pageSize
      * @return
      */
-    @Select("select * from contract where cont_num=#{contNum}")
-    Contract selectByContNum(@Param("contNum") String contNum);
+    List<Contract> selectContractList(@Param("name") String name,@Param("num")String num,@Param("date1")String date1,@Param("date2")String date2,@Param("pageNum")Integer pageNum,@Param("pageSize")Integer pageSize);
+
+    /**
+     * 获取合同表总数
+     * @param name 物资名称
+     * @param num 合同编号
+     * @param date1 签订日期
+     * @param date2 签订日期
+     * @return
+     */
+    List<Contract> selectContractCount(@Param("name") String name,@Param("num")String num,@Param("date1")String date1,@Param("date2")String date2);
 }

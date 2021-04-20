@@ -32,4 +32,9 @@ public class QuoteDetailServiceImpl implements QuoteDetailService {
         example.createCriteria().andQuoteIdEqualTo(id);
         return quoteDetailMapper.deleteByExample(example);
     }
+
+    @Override
+    public int addDetail(QuoteDetail quoteDetail) {
+        return quoteDetailMapper.insertSelective(quoteDetail);
+    }
 }

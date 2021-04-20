@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{common::header('合同查询')}">
+    <meta charset="UTF-8">
+</head>
+<link th:href="@{css/style.css}" rel=stylesheet>
+<body>
+<div class="panel panel-info">
+    <div class="panel-heading" style="text-align: center;">
+        <h3 class="panel-title">查看合同要素</h3></div>
+    <div class="panel-body" style="text-align: center;height:550px;">
+        <TABLE style="LINE-HEIGHT: 30px" cellSpacing=1 cellPadding=0 width="100%" bgColor=#336699 borderColorLight=#006699 border=0>
+            <TBODY>
+            <TR>
+                <TD>
+                    <TABLE cellSpacing=1 cellPadding=3 width="100%" border=0>
+                        <TBODY>
+                        <INPUT type=hidden value=2010010545600 name=printcontNo>
+                        <INPUT type=hidden value=2010010545600 name=p_contNo>
+                        <TR class=t2>
+                            <TD>合&nbsp;&nbsp;同&nbsp;&nbsp;号</TD>
+                            <TD>[[${session.contract.contNum}]]</TD>
+                            <TD>签订日期</TD>
+                            <TD>[[${#dates.format(session.contract.contDate,'yyyy-MM-dd')}]]</TD>
+                            <TD class=t2>合同类型</TD>
+                            <TD>[[${session.contract.contType}]]</TD>
+                        </TR>
+                        <TR class=t2>
+                            <TD>买&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;方</TD>
+                            <TD>[[${session.contract.buyer}]]</TD>
+                            <TD>卖&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;方</TD>
+                            <TD><FONT color=green>[[${session.contract.seller}]]</FONT></TD>
+                            <TD>采购类型</TD>
+                            <TD>[[${session.contract.stockType}]]</TD>
+                        </TR>
+                        <TR class=t2>
+                            <TD class=t2>币&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别</TD>
+                            <TD>[[${session.contract.money}]]</TD>
+                            <TD class=t2>汇&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;率</TD>
+                            <TD>[[${session.contract.contNum}]]</TD>
+                            <TD class=t2>税&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;率</TD>
+                            <TD>[[${session.contract.taxRate}]]</TD>
+                        </TR><!--add   newer_hxf   20060619     合同打印新模板,增加字段  -->
+                        <TR class=t2>
+                            <TD>付款条件</TD>
+                            <TD colSpan=5>[[${session.contract.payCond}]]</TD>
+                        </TR>
+                        <TR class=t2>
+                            <TD>合同总金额(元)</TD>
+                            <TD>[[${session.contract.contPrice}]]</TD>
+                            <TD>运输费用承担方</TD>
+                            <TD>[[${session.contract.transport}]]</TD>
+                            <TD>付款方式</TD>
+                            <TD>[[${session.contract.payWay}]]</TD>
+                        </TR>
+                        <TR class=t2>
+                            <TD colSpan=6>逾期违约：供方逾期交货的，应按逾期交货金额每日千分之
+                                <INPUT style="BORDER-RIGHT: 0px; BORDER-TOP: 0px; FONT-WEIGHT: bold; BORDER-BOTTOM-COLOR: black; BORDER-LEFT: 0px; WIDTH: 20px"
+                                       readOnly alt=请输入逾期交货违约金比例。 maxLength=50 value=2w34 name=YQBL Chk="1"> 向需方支付违约金，逾期超过
+                                <INPUT style="BORDER-RIGHT: 0px; BORDER-TOP: 0px; FONT-WEIGHT: bold; BORDER-BOTTOM-COLOR: black; BORDER-LEFT: 0px; WIDTH: 20px"
+                                       readOnly alt=请输入逾期天数。 maxLength=50 value=213rff name=YQTS Chk="1">天，需方有权解除合同。
+                            </TD>
+                        </TR>
+                        </TBODY>
+                    </TABLE>
+                </TD>
+            </TR>
+            </TBODY>
+        </TABLE>
+        <TABLE style="LINE-HEIGHT: 30px" cellSpacing=1 cellPadding=0 width="100%" bgColor=#336699
+               borderColorLight=#006699 border=0>
+            <TBODY>
+            <TR>
+                <TD>
+                    <TABLE cellSpacing=1 cellPadding=3 width="100%" border=0>
+                        <TBODY>
+                        <TR>
+                            <TD align=middle bgColor=#99ccff colSpan=20><B>项目1</B></TD>
+                        </TR>
+                        <TR class=t2>
+                            <TD align=middle>物资编码</TD>
+                            <TD align=middle>物资名称</TD>
+                            <TD align=middle>数量</TD>
+                            <TD align=middle>单价<BR>(含税)</TD>
+                            <TD align=middle>计量单位</TD>
+                            <TD align=middle>总价<BR>(元)</TD>
+                            <TD align=middle>运杂费<BR>(元)</TD>
+                            <TD align=middle>其他费用<BR>(元)</TD>
+                            <TD align=middle>总计<BR>(元)</TD>
+                            <TD align=middle>到货期</TD>
+                            <TD align=middle>交货地点</TD>
+                            <TD align=middle>运输方式</TD>
+                            <TD align=middle>技术附件</TD>
+                        </TR>
+                        <TR th:each="det:${session.contractDetail}" class=t2>
+                            <TD align=middle>[[${det.materialCode}]]</TD>
+                            <TD align=middle>[[${det.materialName}]]</TD>
+                            <TD noWrap align=middle>[[${det.amount}]]</TD>
+                            <TD noWrap align=middle>[[${det.unitPrice}]]</TD>
+                            <TD noWrap align=middle>[[${det.measureUnit}]]</TD>
+                            <TD noWrap align=middle>[[${det.sumPrice}]]</TD>
+                            <TD noWrap align=middle>[[${det.mixPrice}]]</TD>
+                            <TD noWrap align=middle>[[${det.otherPrice}]]</TD>
+                            <TD noWrap align=middle>[[${det.materialCode}]]</TD>
+                            <TD align=middle>[[${det.endDate}]]</TD>
+                            <TD align=middle>[[${det.address}]]</TD>
+                            <TD align=middle>[[${det.mode}]]</TD>
+                            <TD>[[${det.otherRequire}]]</TD>
+                        </TR>
+                        </TBODY>
+                    </TABLE>
+                </TD>
+            </TR>
+            </TBODY>
+        </TABLE>
+        <TABLE style="LINE-HEIGHT: 30px" cellSpacing=1 cellPadding=0 width="100%" bgColor=#336699
+               borderColorLight=#006699 border=0>
+            <TBODY>
+            <TR>
+                <TD>
+                    <TABLE cellSpacing=1 cellPadding=3 width="100%" border=0>
+                        <TBODY>
+                        <TR class=t1>
+                            <TD width="11%">备注</TD>
+                            <TD class=t2>你敢不批</TD>
+                        </TR>
+                        <TR class=t1>
+                            <TD class=t2 colSpan=2><FONT color=red>合同模板说明：<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;公司名称-株洲南车时代电气股份有限公司，有效日期-2005/10/01至2011/12/31</FONT>
+                            </TD>
+                        </TR>
+                        </TBODY>
+                    </TABLE>
+                </TD>
+            </TR>
+            </TBODY>
+        </TABLE>
+        <P align=center>
+            <INPUT onclick=javascript:ContractPrint_2006(2010010545600) type=button value=打印 name=PrintContract>
+            <INPUT onclick="ret();" type=button value=返回 name=OK>
+        </P>
+    </div>
+</div>
+</body>
+</html>

@@ -35,4 +35,9 @@ public class QuoteServiceImpl implements QuoteService {
     public int updateQuote(Quote quote) {
         return quoteMapper.updateByPrimaryKeySelective(quote);
     }
+
+    @Override
+    public int addQuote(Quote quote) {
+        return quoteMapper.insertSelective(quote);
+    }
 }

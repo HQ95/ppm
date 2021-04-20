@@ -2,7 +2,7 @@ package com.turing.ppm.entity;
 
 import java.util.List;
 
-public class QuoteDetailModel {
+public class EntityModel {
 
     private List<QuoteDetail> quoteDetails;
 

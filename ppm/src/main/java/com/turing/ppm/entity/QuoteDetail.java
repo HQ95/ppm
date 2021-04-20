@@ -1,5 +1,7 @@
 package com.turing.ppm.entity;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.awt.print.PrinterGraphics;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -38,8 +40,9 @@ public class QuoteDetail implements Serializable {
 
     private BigDecimal totalPrice;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date startDate;
-
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date endDate;
 
     private static final long serialVersionUID = 1L;

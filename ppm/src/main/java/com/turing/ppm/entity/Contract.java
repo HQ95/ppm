@@ -1,8 +1,11 @@
 package com.turing.ppm.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 public class Contract implements Serializable {
     private Integer id;
@@ -35,6 +38,7 @@ public class Contract implements Serializable {
 
     private String payCond;
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date verifyDate;
 
     private String qualityStand;
@@ -57,13 +61,13 @@ public class Contract implements Serializable {
 
     private String remark;
 
-    private ContractDetail contractDetail;
+    private List<ContractDetail> contractDetail;
 
-    public ContractDetail getContractDetail() {
+    public List<ContractDetail> getContractDetail() {
         return contractDetail;
     }
 
-    public void setContractDetail(ContractDetail contractDetail) {
+    public void setContractDetail(List<ContractDetail> contractDetail) {
         this.contractDetail = contractDetail;
     }
 

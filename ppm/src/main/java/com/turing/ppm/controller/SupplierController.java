@@ -1,14 +1,15 @@
 package com.turing.ppm.controller;
 
+import com.fasterxml.jackson.databind.annotation.JsonAppend;
 import com.turing.ppm.entity.*;
+import com.turing.ppm.mapper.ContractDetailMapper;
 import com.turing.ppm.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.ansi.AnsiOutput;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
-import javax.xml.crypto.Data;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -35,6 +36,10 @@ public class SupplierController {
     private EnquireService enquireService;
     @Autowired
     private EnquireDetailService enquireDetailService;
+    @Autowired
+    private ContractService contractService;
+    @Autowired
+    private ContractDetailService contractDetailService;
 
 
     /**
@@ -232,14 +237,14 @@ public class SupplierController {
      */
     @PostMapping("/updDetail")
     @ResponseBody
-    public int updateDetail(QuoteDetailModel quoteDetail,Quote quote){
+    public int updateDetail(EntityModel quoteDetail, Quote quote){
         int num = 0;
         List<QuoteDetail> quoteDetails = quoteDetail.getQuoteDetails();
         for (QuoteDetail detail : quoteDetails) {
             num=quoteDetailService.updateDetail(detail);
         }
         if(num>0){
-            System.out.println(quote.getOverallPrice());
+            quote.setQueDate(new Date());
             num=quoteService.updateQuote(quote);
            if(num<=0){
                return -1;
@@ -268,14 +273,61 @@ public class SupplierController {
      */
     @GetMapping("/enquireDetail")
     public String selectEnquireDetail(Integer id, HttpSession session){
+        //获取储存的供应商session
+        if(session.getAttribute("supplier")==null){
+            setSession(session);
+        }
         session.setAttribute("enquire", enquireService.selectById(id));
         session.setAttribute("detail", enquireDetailService.selectByEid(id));
         return "supplyman/enquireDetail" ;
     }
 
+    /**
+     * 添加报价表和报价明细表
+     * @param quoteDetails
+     * @param quote
+     * @return
+     */
+    @PostMapping("/addQuote")
+    @ResponseBody
+    public int addQuote(EntityModel quoteDetails,Quote quote){
+        List<QuoteDetail> quoteDetails1 = quoteDetails.getQuoteDetails();
+        //添加报价提交时间
+        quote.setQueDate(new Date());
+        int num=quoteService.addQuote(quote);
+        if(num>0){
+            //获取添加的报价表的id
+            Integer id = quote.getId();
+            for (QuoteDetail quoteDetail : quoteDetails1) {
+                quoteDetail.setQuoteId(id);
+                num=quoteDetailService.addDetail(quoteDetail);
+                if(num<=0){
+                    return -1;
+                }
+            }
+        }
+        return num;
+    }
 
+    @PostMapping("/contract")
+    @ResponseBody
+    public DataGrid selectContract(String name, String num, String date1, String date2,@RequestParam(value = "page",defaultValue = "1") Integer pageNum, @RequestParam(value = "rows",defaultValue = "5")Integer pageSize){
+        if(name==null){
+            name="";
+        }
+        return contractService.selectList(name, num, date1, date2,(pageNum-1)*pageSize, pageSize);
+    }
 
-
-
+    /**
+     * 根据合同表id查看合同明细表
+     * @param id 合同表id
+     * @return
+     */
+    @GetMapping("/contractDetail")
+    public String selectContractDetail(Integer id,HttpSession session){
+        session.setAttribute("contract", contractService.selectByid(id));
+        session.setAttribute("contractDetail", contractDetailService.selectDetailByConId(id));
+        return "supplyman/contract_view";
+    }
 
 }
